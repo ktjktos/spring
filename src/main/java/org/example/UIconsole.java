@@ -1,6 +1,4 @@
 package org.example;
-
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,15 +10,32 @@ public class UIconsole {
         Authentication auth = new Authentication(userRepo);
         User user;
         while(true) {
-            System.out.println("Please input your login and password: ");
-            String input = scanner.nextLine();
-            String[] split = input.split(" ");
-            user = auth.authenticate(split[0],split[1]);
-            if (user != null) {
-                System.out.println("Successful authentication.");
-                break;
-            }  else {
-                System.out.println("Please try again.");
+            System.out.println("Type \"login\" to login and \"register\" to register." );
+            String choice = scanner.nextLine();
+            if (choice.equals("register")) {
+                System.out.println("Input login and password");
+                String input = scanner.nextLine();
+                String[] split = input.split(" ");
+                if (userRepo.loginExists(split[0])) {
+                    System.out.println("This login already exists.");
+                } else {
+                    User u = new User(split[0],split[1],"USER");
+                    userRepo.addUser(u);
+                    System.out.println("User is added to the database.Please log in.");
+                }
+            } else if (choice.equals("login")) {
+                System.out.println("Please input your login and password: ");
+                String input = scanner.nextLine();
+                String[] split = input.split(" ");
+                user = auth.authenticate(split[0],split[1]);
+                if (user != null) {
+                    System.out.println("Successful authentication.");
+                    break;
+                }  else {
+                    System.out.println("Please try again.");
+                }
+            } else {
+                System.out.println("try again");
             }
         }
         if (user.getRole().equals("USER")) {
@@ -72,10 +87,21 @@ public class UIconsole {
             while(true){
                 auth.updateUserRepo(userRepo);
                 System.out.println("Possible options: \n" +
-                        "show | add :(CAR);BRAND;MODEL;YEAR;PRICE: | add :(MOTORCYCLE);BRAND;MODEL;YEAR;PRICE;CATEGORY: | remove :id: | showAll | exit");
+                        "delete ;USERS_LOGIN; | show | add :(CAR);BRAND;MODEL;YEAR;PRICE: | add :(MOTORCYCLE);BRAND;MODEL;YEAR;PRICE;CATEGORY: | remove :id: | showAll | exit");
                 String input = scanner.nextLine();
                 String[] split = input.split(" ");
                 switch (split[0]) {
+                    case "delete":
+                        if (userRepo.loginExists(split[1])) {
+                            if (!(userRepo.loginHasRented(split[1]))) {
+                                userRepo.deleteUser(split[1]);
+                            } else {
+                                System.out.println("Cant delete user. Reason: is currently renting a car.");
+                            }
+                        } else {
+                            System.out.println("Cant delete user. Reason: user does not exist.");
+                        }
+                        break;
                     case "show":
                         List<Vehicle> list = vehicleRepo.getVehicles();
                         System.out.println("Catalog:");

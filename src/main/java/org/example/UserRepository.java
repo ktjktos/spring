@@ -36,7 +36,6 @@ public class UserRepository implements IUserRepository{
         return u;
     }
 
-    @Override
     public void save() {
         try (PrintWriter writer = new PrintWriter("users.csv")){
             for (User user: users) {
@@ -53,7 +52,6 @@ public class UserRepository implements IUserRepository{
         }
     }
 
-    @Override
     public void load() {
         this.users = new ArrayList<>();
         try {
@@ -89,5 +87,38 @@ public class UserRepository implements IUserRepository{
                 break;
             }
         }
+    }
+
+    public boolean loginExists(String login) {
+        for(User user: users) {
+            if (user.getLogin().equals(login)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addUser(User user) {
+        users.add(user);
+        this.save();
+    }
+
+    public void deleteUser (String login) {
+        for(User user: users) {
+            if (user.getLogin().equals(login)) {
+                users.remove(user);
+                this.save();
+                break;
+            }
+        }
+    }
+
+    public boolean loginHasRented(String login) {
+        for (User user: users) {
+            if (user.getLogin().equals(login)) {
+                return user.getRentedVehicleId() != null;
+            }
+        }
+        return false;
     }
 }

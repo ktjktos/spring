@@ -55,7 +55,6 @@ public class VehicleRepositoryImpl implements IVehicleRepository{
         return v;
     }
 
-    @Override
     public void save() {
         try (PrintWriter writer = new PrintWriter("vehicles.txt")){
             for (Vehicle vehicle: vehicles) {
@@ -66,7 +65,6 @@ public class VehicleRepositoryImpl implements IVehicleRepository{
         }
     }
 
-    @Override
     public void load() {
         this.vehicles = new ArrayList<>();
         try {
@@ -129,9 +127,5 @@ public class VehicleRepositoryImpl implements IVehicleRepository{
             if (vehicle.getId().equals(id)) return vehicle;
         }
         return null;
-    }
-
-    public void stopRentingVehicle(Vehicle vehicle) {
-        vehicle.setRented(false);
     }
 }
