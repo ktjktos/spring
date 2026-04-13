@@ -1,14 +1,23 @@
 package org.example;
-import java.util.List;
-import java.util.Scanner;
+
+import lombok.*;
+
+import java.util.*;
+
+@AllArgsConstructor
+@Builder
 
 public class UIconsole {
+
+    VehicleRepositoryImpl vehicleRepo;
+    UserRepository userRepo;
+    AuthService authService;
+    RentalRepository rentalRepo;
+
+    User user;
+    Optional<Rental> r;
     public void run() {
-        VehicleRepositoryImpl vehicleRepo = new VehicleRepositoryImpl();
         Scanner scanner = new Scanner(System.in);
-        UserRepository userRepo = new UserRepository();
-        Authentication auth = new Authentication(userRepo);
-        User user;
         while(true) {
             System.out.println("Type \"login\" to login and \"register\" to register." );
             String choice = scanner.nextLine();
@@ -16,18 +25,17 @@ public class UIconsole {
                 System.out.println("Input login and password");
                 String input = scanner.nextLine();
                 String[] split = input.split(" ");
-                if (userRepo.loginExists(split[0])) {
+                Optional<User> u = userRepo.findByLogin(split[0]);
+                if (u.isPresent()) {
                     System.out.println("This login already exists.");
                 } else {
-                    User u = new User(split[0],split[1],"USER");
-                    userRepo.addUser(u);
-                    System.out.println("User is added to the database.Please log in.");
+                    System.out.println(authService.register(split[0],split[1]));
                 }
             } else if (choice.equals("login")) {
                 System.out.println("Please input your login and password: ");
                 String input = scanner.nextLine();
                 String[] split = input.split(" ");
-                user = auth.authenticate(split[0],split[1]);
+                user = authService.login(split[0],split[1]);
                 if (user != null) {
                     System.out.println("Successful authentication.");
                     break;
@@ -40,7 +48,6 @@ public class UIconsole {
         }
         if (user.getRole().equals("USER")) {
             while(true){
-                auth.updateUserRepo(userRepo);
                 System.out.println("Possible options: \n" +
                         "info | show | rent :id: | return :id: | exit");
                 String input = scanner.nextLine();
@@ -48,86 +55,90 @@ public class UIconsole {
                 switch (split[0]) {
                     case "info":
                         System.out.println(user.getLogin() + " " + user.getRole());
-                        if (user.getRentedVehicleId() != null) {
-                            System.out.println(vehicleRepo.getVehicle(user.getRentedVehicleId()));
+                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
+                        if (r.isPresent()) {
+                            System.out.println(vehicleRepo.findById(r.get().getVehicleId()));
                         } else {
                             System.out.println("brak wypozyczonego pojazdu");
                         }
                         break;
                     case "show":
-                        List<Vehicle> list = vehicleRepo.getVehicles();
+                        List<Vehicle> list = vehicleRepo.findAll();
                         System.out.println("Catalog:");
                         for(Vehicle vehicle: list) {
-                            if (!vehicle.isRented()) {
+                            r = rentalRepo.findByVehicleIdAndReturnDateIsNull(vehicle.getId());
+                            if (r.isEmpty()) {
                                 System.out.println(vehicle);
                             }
                         }
                         break;
                     case "rent":
-                        if (user.getRentedVehicleId() == null) {
-                            boolean rented = vehicleRepo.rentVehicle(split[1]);
-                            if (rented) {
-                                userRepo.update(user,split[1]);
-                            }
+                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
+                        if (r.isEmpty()) {
+                            Rental rental = Rental.builder()
+                                    .id(null)
+                                    .userId(user.getId())
+                                    .vehicleId(split[1])
+                                    .rentDateTime(new Date())
+                                    .returnDateTime(null)
+                                    .build();
+                            rentalRepo.save(rental);
                         }
                         break;
                     case "return":
-                        boolean returned = vehicleRepo.returnVehicle(split[1]);
-                        if (returned) {
-                            userRepo.update(user,null);
+                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
+                        if (r.isPresent()) {
+                            r.get().setReturnDateTime(new Date());
+                            rentalRepo.save(r.get());
                         }
                         break;
                     case "exit":
-                        vehicleRepo.save();
                         return;
                 }
             }
         }
         else if (user.getRole().equals("ADMIN")) {
             while(true){
-                auth.updateUserRepo(userRepo);
                 System.out.println("Possible options: \n" +
-                        "delete ;USERS_LOGIN; | show | add :(CAR);BRAND;MODEL;YEAR;PRICE: | add :(MOTORCYCLE);BRAND;MODEL;YEAR;PRICE;CATEGORY: | remove :id: | showAll | exit");
+                        "show | add :TYPE_OF_VEHICLE;BRAND;MODEL;YEAR;PLATE;PRICE;(ATTRIBUTE ATTRIBUTE2): | remove :id: | exit");
                 String input = scanner.nextLine();
                 String[] split = input.split(" ");
                 switch (split[0]) {
-                    case "delete":
-                        if (userRepo.loginExists(split[1])) {
-                            if (!(userRepo.loginHasRented(split[1]))) {
-                                userRepo.deleteUser(split[1]);
-                            } else {
-                                System.out.println("Cant delete user. Reason: is currently renting a car.");
-                            }
-                        } else {
-                            System.out.println("Cant delete user. Reason: user does not exist.");
-                        }
-                        break;
                     case "show":
-                        List<Vehicle> list = vehicleRepo.getVehicles();
+                        List<Vehicle> list = vehicleRepo.findAll();
                         System.out.println("Catalog:");
                         for(Vehicle vehicle: list) {
                             System.out.println(vehicle);
                         }
                         break;
                     case "add":
-                        vehicleRepo.add(split[1]);
+                        String[] sp = split[1].split(";");
+                        Vehicle vehicle = Vehicle.builder()
+                                    .id(null)
+                                    .typeOfVehicle(sp[0])
+                                    .brand(sp[1])
+                                    .model(sp[2])
+                                    .year(Integer.parseInt(sp[3]))
+                                    .plate(sp[4])
+                                    .price(Integer.parseInt(sp[5]))
+                                    .attributes(null)
+                                    .build();
+                        if (sp.length > 6) {
+                            int i = 6;
+                            while (i+1 < sp.length) {
+                                vehicle.addAttribute(sp[i],sp[i+1]);
+                                i = i+2;
+                            }
+                        }
+                        vehicleRepo.save(vehicle);
                         break;
                     case "remove":
-                        Vehicle v = vehicleRepo.getVehicle(split[1]);
-                        if (!v.isRented()) {
-                            vehicleRepo.remove(split[1]);
-                        }
-                        break;
-                    case "showAll":
-                        List<User> users = userRepo.getUsers();
-                        for(User u: users) {
-                            if (u.getRentedVehicleId() != null) {
-                                System.out.println(vehicleRepo.getVehicle(u.getRentedVehicleId()) + ";;;" + u.getLogin() + ";" + u.getRole());
-                            }
+                        r = rentalRepo.findByVehicleIdAndReturnDateIsNull(split[1]);
+                        if (r.isEmpty()) {
+                            vehicleRepo.deleteById(split[1]);
                         }
                         break;
                     case "exit":
-                        vehicleRepo.save();
                         return;
                 }
             }

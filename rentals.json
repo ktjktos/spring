@@ -1,0 +1,9 @@
+[
+  {
+    "id": "1",
+    "vehicleId": "2",
+    "userId": "3",
+    "rentDateTime": "Apr 14, 2026, 12:21:22 AM",
+    "returnDateTime": "Apr 14, 2026, 12:21:46 AM"
+  }
+]

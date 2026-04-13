@@ -1,9 +1,12 @@
 package org.example;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserRepository {
-    User getUser(String login, String password);
-    List<User> getUsers();
-    void update(User user,String id);
+    List<User> findAll();
+    Optional<User> findById(String id);
+    Optional<User> findByLogin(String login);
+    User save(User user);
+    void deleteById(String id);
 }

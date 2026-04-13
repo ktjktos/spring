@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "typeOfVehicle": "Motorcycle",
+    "brand": "Honda",
+    "model": "CBR1000RR",
+    "year": 2020,
+    "plate": "Lu321",
+    "price": 200,
+    "attributes": {
+      "licence": "A"
+    }
+  },
+  {
+    "id": "2",
+    "typeOfVehicle": "Car",
+    "brand": "Chevrolet",
+    "model": "Impala",
+    "year": 1967,
+    "plate": "KAZ2Y5",
+    "price": 999,
+    "attributes": {
+      "color": "black",
+      "engine": "327"
+    }
+  }
+]

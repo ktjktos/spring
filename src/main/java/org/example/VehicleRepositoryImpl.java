@@ -1,131 +1,93 @@
 package org.example;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.HashSet;
-import java.util.Set;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
 
 public class VehicleRepositoryImpl implements IVehicleRepository{
     List<Vehicle> vehicles;
     Set<Integer> existingIDs = new HashSet<>();
     public VehicleRepositoryImpl() {
-        load();
-    }
-
-    @Override
-    public Boolean rentVehicle(String id) {
-        for(Vehicle vehicle: vehicles){
-            if (vehicle.getId().equals(id) && !vehicle.isRented()){
-                vehicle.setRented(true);
-                this.save();
-                return true;
+        Path path = Path.of("vehicles.json");
+        vehicles = new ArrayList<>();
+        try {
+            if (Files.notExists(path)) {
+                Files.writeString(path,"[]");
             }
+            String json = Files.readString(path);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            vehicles = gson.fromJson(json, new TypeToken<List<Vehicle>>() {}.getType());
+        } catch (IOException e) {
+            System.out.println("cos poszlo nie tak w ladowaniu vehicleRepo");
         }
-        return false;
-    }
-
-
-    @Override
-    public Boolean returnVehicle(String id) {
-        for(Vehicle vehicle: vehicles){
-            if (vehicle.getId().equals(id) && vehicle.isRented()){
-                vehicle.setRented(false);
-                this.save();
-                return true;
+        if (this.vehicles != null) {
+            for (Vehicle v : vehicles) {
+                existingIDs.add(Integer.parseInt(v.getId()));
             }
+        } else {
+            this.vehicles = new ArrayList<>();
         }
-        return false;
     }
 
     @Override
-    public List<Vehicle> getVehicles() {
+    public List<Vehicle> findAll() {
         List<Vehicle> v = new ArrayList<>();
         for(Vehicle vehicle: vehicles){
-            if(vehicle.getTypeOfVehicle().equals("CAR")) {
-                Car newC = new Car(vehicle);
-                v.add(newC);
-            } else {
-                Motorcycle newM = new Motorcycle(vehicle);
-                v.add(newM);
-            }
+            v.add(vehicle.copy());
         }
         return v;
     }
 
-    public void save() {
-        try (PrintWriter writer = new PrintWriter("vehicles.txt")){
-            for (Vehicle vehicle: vehicles) {
-                writer.println(vehicle.toCSV());
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void load() {
-        this.vehicles = new ArrayList<>();
-        try {
-            String path = "vehicles.txt";
-            File file = new File(path);
-            Scanner scanner = new Scanner(file);
-
-            while(scanner.hasNextLine()){
-                String line = scanner.nextLine();
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-                String[] obj = line.split(";");
-                this.existingIDs.add(Integer.parseInt(obj[1]));
-                if (obj[0].equals("CAR")){
-                    vehicles.add(new Car(obj[1],obj[2],obj[3],Integer.parseInt(obj[4]),
-                            (int)Double.parseDouble(obj[5]),Boolean.parseBoolean(obj[6])));
-                } else {
-                    vehicles.add(new Motorcycle(obj[1],obj[2],obj[3],Integer.parseInt(obj[4]),
-                            (int)Double.parseDouble(obj[5]),Boolean.parseBoolean(obj[6]),obj[7]));
-                }
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Nie znaleziono pliku.(VehicleRepo)");
-        }
-    }
-
-    public void add(String data) {
-        //CAR;Audi;1;A4;2022;200
-        //MOTORCYCLE;5;Honda;CBR1000;2019;300;false;A
-        //:CAR;BRAND;MODEL;YEAR;PRICE:
-        //:MOTORCYCLE;BRAND;MODEL;YEAR;PRICE;CATEGORY:
+    @Override
+    public Vehicle save(Vehicle vehicle) {
         int id = 1;
-        while(existingIDs.contains(id)) { id+=1;}
-        existingIDs.add(id);
-
-        String[] s = data.split(";");
-        if (s[0].equals("CAR")) {
-            Car car = new Car(Integer.toString(id),s[1],s[2],Integer.parseInt(s[3]),Integer.parseInt(s[4]),false);
-            vehicles.add(car);
+        if (vehicle.getId() == null) {
+            while(existingIDs.contains(id)) { id+=1;}
+            existingIDs.add(id);
+            vehicle.setId(Integer.toString(id));
+            vehicles.add(vehicle);
         } else {
-            Motorcycle motorcycle = new Motorcycle(Integer.toString(id),s[1],s[2],Integer.parseInt(s[3]),Integer.parseInt(s[4]),false,s[5]);
-            vehicles.add(motorcycle);
+            vehicles.remove(vehicle);
+            vehicles.add(vehicle);
         }
-        this.save();
+        this.writeToFile();
+        return vehicle;
     }
-    public void remove(String id) {
+
+    @Override
+    public void deleteById(String id) {
         for (Vehicle v: vehicles) {
             if (v.getId().equals(id)) {
                 this.vehicles.remove(v);
                 this.existingIDs.remove(Integer.parseInt(id));
-                this.save();
+                this.writeToFile();
                 break;
             }
         }
     }
-    public Vehicle getVehicle(String id) {
-        for(Vehicle vehicle: vehicles){
-            if (vehicle.getId().equals(id)) return vehicle;
+
+    public void writeToFile() {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(vehicles);
+            Files.writeString(Path.of("vehicles.json"), json,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            System.out.println("cos poszlo nie tak w zapisywaniu vehicleRepo");
         }
-        return null;
+    }
+
+    @Override
+    public Optional<Vehicle> findById(String id) {
+        for(Vehicle vehicle: vehicles){
+            if (vehicle.getId().equals(id)) return Optional.of(vehicle);
+        }
+        return Optional.empty();
     }
 }

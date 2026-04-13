@@ -1,14 +1,10 @@
 package org.example;
 import java.util.List;
+import java.util.Optional;
 
 public interface IVehicleRepository {
-    Boolean returnVehicle(String id);
-
-    Boolean rentVehicle(String id);
-
-
-    List<Vehicle> getVehicles();
-    void add(String data);
-    void remove(String id);
-    Vehicle getVehicle(String id);
+    List<Vehicle> findAll();
+    Optional<Vehicle> findById(String id);
+    Vehicle save(Vehicle vehicle);
+    void deleteById(String id);
 }

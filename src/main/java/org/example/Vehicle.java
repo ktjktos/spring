@@ -1,82 +1,69 @@
 package org.example;
-public abstract class Vehicle {
-    private String typeOfVehicle;
+
+import lombok.*;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+@Getter
+@Setter
+@EqualsAndHashCode(of="id")
+@NoArgsConstructor
+
+public class Vehicle {
     private String id;
+    private String typeOfVehicle;
     private String brand;
     private String model;
     private Integer year;
+    private String plate;
     private Integer price;
-    private Boolean rented;
+    private Map<String,Object> attributes = new HashMap<>();
 
-    public Vehicle(String id, String brand, String model, Integer year, Integer price, Boolean rented) {
+    @Builder
+    public Vehicle(String id, String typeOfVehicle, String brand, String model, Integer year, String plate, Integer price, Map<String,Object> attributes) {
         this.id = id;
-        this.brand = brand;
-        this.model = model;
-        this.year = year;
-        this.price = price;
-        this.rented = rented;
-    }
-
-    public String getTypeOfVehicle() {
-        return typeOfVehicle;
-    }
-
-    public void setTypeOfVehicle(String typeOfVehicle) {
         this.typeOfVehicle = typeOfVehicle;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
         this.model = model;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(Integer year) {
         this.year = year;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
+        this.plate = plate;
         this.price = price;
+        this.attributes = attributes == null ? new HashMap<>() : new HashMap<>(attributes);
     }
 
-    public boolean isRented() {
-        return rented;
+    public Map<String, Object> getAttributes() {
+        return Collections.unmodifiableMap(attributes);
+    }
+    public Object getAttribute(String key) {
+        return attributes.get(key);
+    }
+    public void addAttribute(String key, Object value) {
+        attributes.put(key,value);
+    }
+    public void removeAttribute(String key) {
+        attributes.remove(key);
+    }
+    public Vehicle copy() {
+        return Vehicle.builder()
+                .id(id)
+                .typeOfVehicle(typeOfVehicle)
+                .brand(brand)
+                .model(model)
+                .year(year)
+                .plate(plate)
+                .price(price)
+                .attributes(new HashMap<>(attributes))
+                .build();
     }
 
-    public void setRented(Boolean rented) {
-        this.rented = rented;
-    }
-
-    public String toCSV() {
-        return typeOfVehicle + ";" + id + ";" + brand + ";"+ model + ";" + year + ";" + price + ";" + rented;
-    }
     public String toString() {
-        return id + "| "+ brand + " " + model + " " + year + " price: " + price + " PLN";
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append("| ").append(brand).append(" ").append(model).append(" ").append(year).append(" price: ").append(price).append(" PLN");
+        if (!attributes.isEmpty()) {
+            sb.append(" | Attributes: ").append(attributes);
+        }
+        return sb.toString();
     }
 }
