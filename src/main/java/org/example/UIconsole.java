@@ -100,7 +100,7 @@ public class UIconsole {
         else if (user.getRole().equals("ADMIN")) {
             while(true){
                 System.out.println("Possible options: \n" +
-                        "show | add :TYPE_OF_VEHICLE;BRAND;MODEL;YEAR;PLATE;PRICE;(ATTRIBUTE ATTRIBUTE2): | remove :id: | exit");
+                        "show | add :TYPE_OF_VEHICLE;BRAND;MODEL;YEAR;PLATE;PRICE;(ATTRIBUTE;ATTRIBUTE2): | remove :id: | exit");
                 String input = scanner.nextLine();
                 String[] split = input.split(" ");
                 switch (split[0]) {
