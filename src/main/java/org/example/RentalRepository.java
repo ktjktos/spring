@@ -11,8 +11,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class RentalRepository {
-    List<Rental> rentals;
-    Set<Integer> existingIDs = new HashSet<>();
+    private List<Rental> rentals;
+    private Set<Integer> existingIDs = new HashSet<>();
 
     public RentalRepository() {
         Path path = Path.of("rentals.json");

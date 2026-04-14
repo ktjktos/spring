@@ -11,8 +11,8 @@ import java.util.*;
 
 public class UserRepository implements IUserRepository{
 
-    List<User> users;
-    Set<Integer> existingIDs = new HashSet<>();
+    private List<User> users;
+    private Set<Integer> existingIDs = new HashSet<>();
 
     public UserRepository() {
         Path path = Path.of("users.json");

@@ -10,8 +10,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public class VehicleRepositoryImpl implements IVehicleRepository{
-    List<Vehicle> vehicles;
-    Set<Integer> existingIDs = new HashSet<>();
+    private List<Vehicle> vehicles;
+    private Set<Integer> existingIDs = new HashSet<>();
     public VehicleRepositoryImpl() {
         Path path = Path.of("vehicles.json");
         vehicles = new ArrayList<>();

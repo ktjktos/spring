@@ -9,7 +9,7 @@ import java.util.*;
 
 public class UIconsole {
 
-    VehicleRepositoryImpl vehicleRepo;
+    VehicleService vehicleService;
     UserRepository userRepo;
     AuthService authService;
     RentalRepository rentalRepo;
@@ -57,13 +57,13 @@ public class UIconsole {
                         System.out.println(user.getLogin() + " " + user.getRole());
                         r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
                         if (r.isPresent()) {
-                            System.out.println(vehicleRepo.findById(r.get().getVehicleId()));
+                            System.out.println(vehicleService.findVehicleById(r.get().getVehicleId()));
                         } else {
                             System.out.println("brak wypozyczonego pojazdu");
                         }
                         break;
                     case "show":
-                        List<Vehicle> list = vehicleRepo.findAll();
+                        List<Vehicle> list = vehicleService.findAllVehicles();
                         System.out.println("Catalog:");
                         for(Vehicle vehicle: list) {
                             r = rentalRepo.findByVehicleIdAndReturnDateIsNull(vehicle.getId());
@@ -105,7 +105,7 @@ public class UIconsole {
                 String[] split = input.split(" ");
                 switch (split[0]) {
                     case "show":
-                        List<Vehicle> list = vehicleRepo.findAll();
+                        List<Vehicle> list = vehicleService.findAllVehicles();
                         System.out.println("Catalog:");
                         for(Vehicle vehicle: list) {
                             System.out.println(vehicle);
@@ -130,12 +130,12 @@ public class UIconsole {
                                 i = i+2;
                             }
                         }
-                        vehicleRepo.save(vehicle);
+                        vehicleService.addVehicle(vehicle);
                         break;
                     case "remove":
                         r = rentalRepo.findByVehicleIdAndReturnDateIsNull(split[1]);
                         if (r.isEmpty()) {
-                            vehicleRepo.deleteById(split[1]);
+                            vehicleService.deleteVehicleById(split[1]);
                         }
                         break;
                     case "exit":
