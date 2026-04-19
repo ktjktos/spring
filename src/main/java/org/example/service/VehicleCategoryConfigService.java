@@ -1,10 +1,13 @@
-package org.example;
+package org.example.service;
+
+import org.example.model.VehicleCategoryConfig;
+import org.example.repository.IVehicleCategoryConfigRepository;
 
 import java.util.List;
 
 public class VehicleCategoryConfigService {
-    private final VehicleCategoryConfigRepository configRepo;
-    public VehicleCategoryConfigService(VehicleCategoryConfigRepository configRepo) {
+    private final IVehicleCategoryConfigRepository configRepo;
+    public VehicleCategoryConfigService(IVehicleCategoryConfigRepository configRepo) {
         this.configRepo = configRepo;
     }
 

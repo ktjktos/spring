@@ -1,6 +1,14 @@
-package org.example;
+package org.example.ui;
 
 import lombok.*;
+
+import org.example.model.User;
+
+import org.example.repository.RentalRepository;
+import org.example.service.AuthService;
+import org.example.service.RentalService;
+import org.example.service.UserService;
+import org.example.service.VehicleService;
 
 import java.util.*;
 
@@ -10,57 +18,46 @@ import java.util.*;
 public class UIconsole {
 
     VehicleService vehicleService;
-    UserRepository userRepo;
+    UserService userService;
     AuthService authService;
-    RentalRepository rentalRepo;
+    RentalService rentalService;
 
-    User user;
-    Optional<Rental> r;
+    InputHandler inputHandler;
+    User user = null;
+
     public void run() {
-        Scanner scanner = new Scanner(System.in);
+        String[] multipleChoice;
+        String choice;
+        loginLoop:
         while(true) {
-            System.out.println("Type \"login\" to login and \"register\" to register." );
-            String choice = scanner.nextLine();
-            if (choice.equals("register")) {
-                System.out.println("Input login and password");
-                String input = scanner.nextLine();
-                String[] split = input.split(" ");
-                Optional<User> u = userRepo.findByLogin(split[0]);
-                if (u.isPresent()) {
-                    System.out.println("This login already exists.");
-                } else {
-                    System.out.println(authService.register(split[0],split[1]));
-                }
-            } else if (choice.equals("login")) {
-                System.out.println("Please input your login and password: ");
-                String input = scanner.nextLine();
-                String[] split = input.split(" ");
-                user = authService.login(split[0],split[1]);
-                if (user != null) {
-                    System.out.println("Successful authentication.");
+            choice = inputHandler.readSingleChoice("Type \"login\" to login and \"register\" to register.","login","register");
+            multipleChoice = inputHandler.getMultipleStrings("Input your login and password",2);
+            switch(choice) {
+                case "register":
+                    if (authService.findByLogin(multipleChoice[0]).isPresent()) {
+                        System.out.println("This login already exists.");
+                    } else {
+                        authService.register(multipleChoice[0],multipleChoice[1]);
+                    }
                     break;
-                }  else {
-                    System.out.println("Please try again.");
-                }
-            } else {
-                System.out.println("try again");
+                case "login":
+                    user = authService.login(multipleChoice[0],multipleChoice[1]);
+                    if (user != null) {
+                        System.out.println("Successful authentication.");
+                        break loginLoop;
+                    }  else {
+                        System.out.println("Please try again.");
+                    }
+                    break;
             }
         }
         if (user.getRole().equals("USER")) {
-            while(true){
-                System.out.println("Possible options: \n" +
-                        "info | show | rent :id: | return :id: | exit");
-                String input = scanner.nextLine();
-                String[] split = input.split(" ");
-                switch (split[0]) {
+            while(true){ // TODO: DOKONCZYC CZYSZCZENIE UICONSOLE
+                choice = inputHandler.readSingleChoice("Possible options:\ninfo | show | rent | return | exit","info","show","rent","return","exit");
+                switch (choice) {
                     case "info":
-                        System.out.println(user.getLogin() + " " + user.getRole());
-                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
-                        if (r.isPresent()) {
-                            System.out.println(vehicleService.findVehicleById(r.get().getVehicleId()));
-                        } else {
-                            System.out.println("brak wypozyczonego pojazdu");
-                        }
+                        System.out.println(userService.displayCredentials(user));
+                        System.out.println(rentalService.whatVehicleIsRented(user.getId()));
                         break;
                     case "show":
                         List<Vehicle> list = vehicleService.findAllVehicles();

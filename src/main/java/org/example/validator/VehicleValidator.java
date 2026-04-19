@@ -1,4 +1,8 @@
-package org.example;
+package org.example.validator;
+
+import org.example.model.VehicleCategoryConfig;
+import org.example.model.Vehicle;
+import org.example.service.VehicleCategoryConfigService;
 
 import java.util.Map;
 

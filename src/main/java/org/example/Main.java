@@ -1,23 +1,30 @@
 package org.example;
 
+import org.example.repository.*;
+import org.example.service.*;
+import org.example.ui.UIconsole;
+import org.example.validator.VehicleValidator;
+
 public class Main {
     public static void main(String[] args) {
-        VehicleRepositoryImpl vehicleRepo = new VehicleRepositoryImpl();
+        VehicleRepository vehicleRepo = new VehicleRepository();
         UserRepository userRepo = new UserRepository();
         RentalRepository rentalRepo = new RentalRepository();
 
-        VehicleCategoryConfigRepository configRepository = new VehicleCategoryConfigJsonRepsitory();
+        IVehicleCategoryConfigRepository configRepository = new VehicleCategoryConfigRepository();
         VehicleCategoryConfigService configService = new VehicleCategoryConfigService(configRepository);
         VehicleValidator vehicleValidator = new VehicleValidator(configService);
         VehicleService vehicleService = new VehicleService(vehicleValidator,vehicleRepo);
+        RentalService rentalService = new RentalService(rentalRepo,vehicleService);
+        UserService userService = new UserService(userRepo);
 
-        AuthService authService = new AuthService(userRepo);
+        AuthService authService = new AuthService(userService);
         //TODO: UI nie moze wiedziec o repo, musi korzystac z service
         UIconsole console = UIconsole.builder()
                         .vehicleService(vehicleService)
-                        .userRepo(userRepo)
+                        .userService(userService)
                         .authService(authService)
-                        .rentalRepo(rentalRepo)
+                        .rentalService(rentalRepo)
                         .build();
         console.run();
     }

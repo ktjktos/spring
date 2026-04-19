@@ -1,13 +1,17 @@
-package org.example;
+package org.example.service;
 
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
+import org.example.validator.VehicleValidator;
+import org.example.model.Vehicle;
+import org.example.repository.VehicleRepository;
+
 @AllArgsConstructor
 
 public class VehicleService {
     private VehicleValidator vehicleValidator;
-    private VehicleRepositoryImpl vehicleRepo;
+    private VehicleRepository vehicleRepo;
 
     public Vehicle addVehicle(Vehicle vehicle) {
         vehicleValidator.validate(vehicle);

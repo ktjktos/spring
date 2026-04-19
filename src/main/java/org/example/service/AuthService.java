@@ -1,5 +1,7 @@
-package org.example;
+package org.example.service;
 
+import org.example.model.User;
+import org.example.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import lombok.*;
 
@@ -9,22 +11,25 @@ import java.util.Optional;
 
 public class AuthService {
 
-    UserRepository userRepo;
+    UserService userService;
 
-    public String register(String login, String password) {
-        userRepo.save(User.builder()
+    public User register(String login, String password) {
+        return userService.save(User.builder()
                 .login(login)
                 .password(BCrypt.hashpw(password,BCrypt.gensalt()))
                 .role("USER")
                 .build());
-        return "Udalo sie dodac nowego uzytkownika.";
     }
 
     public User login(String login, String password) {
-        Optional<User> u = userRepo.findByLogin(login);
+        Optional<User> u = userService.findByLogin(login);
         if (u.isPresent()) {
             if (BCrypt.checkpw(password,u.get().getPassword()))  return u.get();
         }
         return null;
+    }
+
+    public Optional<User> findByLogin(String login) {
+        return this.userService.findByLogin(login);
     }
 }

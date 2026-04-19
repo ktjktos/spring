@@ -1,8 +1,10 @@
-package org.example;
+package org.example.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.example.model.User;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

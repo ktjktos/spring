@@ -1,8 +1,9 @@
-package org.example;
+package org.example.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.example.model.VehicleCategoryConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VehicleCategoryConfigJsonRepsitory implements VehicleCategoryConfigRepository{
+public class VehicleCategoryConfigRepository implements IVehicleCategoryConfigRepository {
     private List<VehicleCategoryConfig> configs;
 
-    public VehicleCategoryConfigJsonRepsitory() {
+    public VehicleCategoryConfigRepository() {
         Path path = Path.of("categories.json");
         configs = new ArrayList<>();
         try {
