@@ -10,5 +10,5 @@ public interface IUserRepository {
     Optional<User> findById(String id);
     Optional<User> findByLogin(String login);
     User save(User user);
-    void deleteById(String id);
+    boolean deleteById(String id);
 }

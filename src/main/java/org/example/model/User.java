@@ -21,4 +21,8 @@ public class User {
                 .role(role)
                 .build();
     }
+
+    public String toString() {
+        return id + "|" + login + ": " + role;
+    }
 }

@@ -81,15 +81,16 @@ public class UserRepository implements IUserRepository{
         }
         return Optional.empty();
     }
-    public void deleteById (String id) {
+    public boolean deleteById (String id) {
         for(User user: users) {
             if (user.getId().equals(id)) {
                 users.remove(user);
                 existingIDs.remove(Integer.parseInt(id));
                 this.writeToFile();
-                break;
+                return true;
             }
         }
+        return false;
     }
     public void writeToFile() {
         try {

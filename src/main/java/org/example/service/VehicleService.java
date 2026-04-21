@@ -34,11 +34,11 @@ public class VehicleService {
     }
 
     public void addAttributes(String attribute, String value, Vehicle vehicle) {
-       vehicle.addAttribute(attribute,value);
+        vehicle.addAttribute(attribute,value);
     }
 
     public List<Vehicle> findAllVehicles() {
-       return vehicleRepo.findAll();
+        return vehicleRepo.findAll();
     }
 
     public void deleteVehicleById(String id) {

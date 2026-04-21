@@ -3,6 +3,7 @@ package org.example.service;
 import org.example.model.User;
 import org.example.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserService {
@@ -23,5 +24,13 @@ public class UserService {
 
     public String displayCredentials(User user) {
         return user.getLogin() + " " + user.getRole();
+    }
+
+    public boolean deleteUser(String id) {
+        return this.userRepo.deleteById(id);
+    }
+
+    public List<User> getAll() {
+        return userRepo.findAll();
     }
 }

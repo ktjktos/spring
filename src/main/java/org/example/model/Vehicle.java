@@ -66,4 +66,8 @@ public class Vehicle {
         }
         return sb.toString();
     }
+
+    public void clearAttributes() {
+        attributes.clear();
+    }
 }

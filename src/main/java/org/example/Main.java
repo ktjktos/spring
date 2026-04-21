@@ -15,19 +15,20 @@ public class Main {
         IVehicleCategoryConfigRepository configRepository = new VehicleCategoryConfigRepository();
         VehicleCategoryConfigService configService = new VehicleCategoryConfigService(configRepository);
         VehicleValidator vehicleValidator = new VehicleValidator(configService);
+
         VehicleService vehicleService = new VehicleService(vehicleValidator,vehicleRepo);
-        RentalService rentalService = new RentalService(rentalRepo,vehicleService);
         UserService userService = new UserService(userRepo);
+        RentalService rentalService = new RentalService(rentalRepo,vehicleService,userService);
 
         AuthService authService = new AuthService(userService);
 
         UIconsole console = UIconsole.builder()
-                        .vehicleService(vehicleService)
-                        .userService(userService)
-                        .authService(authService)
-                        .rentalService(rentalService)
-                        .inputHandler(new InputHandler())
-                        .build();
+                .vehicleService(vehicleService)
+                .userService(userService)
+                .authService(authService)
+                .rentalService(rentalService)
+                .inputHandler(new InputHandler())
+                .build();
         console.run();
     }
 }
