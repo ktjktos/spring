@@ -3,8 +3,8 @@ package org.example.ui;
 import lombok.*;
 
 import org.example.model.User;
+import org.example.model.Vehicle;
 
-import org.example.repository.RentalRepository;
 import org.example.service.AuthService;
 import org.example.service.RentalService;
 import org.example.service.UserService;
@@ -52,7 +52,7 @@ public class UIconsole {
             }
         }
         if (user.getRole().equals("USER")) {
-            while(true){ // TODO: DOKONCZYC CZYSZCZENIE UICONSOLE
+            while(true){
                 choice = inputHandler.readSingleChoice("Possible options:\ninfo | show | rent | return | exit","info","show","rent","return","exit");
                 switch (choice) {
                     case "info":
@@ -60,34 +60,29 @@ public class UIconsole {
                         System.out.println(rentalService.whatVehicleIsRented(user.getId()));
                         break;
                     case "show":
-                        List<Vehicle> list = vehicleService.findAllVehicles();
-                        System.out.println("Catalog:");
-                        for(Vehicle vehicle: list) {
-                            r = rentalRepo.findByVehicleIdAndReturnDateIsNull(vehicle.getId());
-                            if (r.isEmpty()) {
-                                System.out.println(vehicle);
-                            }
+                        List<Vehicle> list = rentalService.getAvailableVehicles();
+                        if (list.isEmpty()) {
+                            System.out.println("No vehicles available currently.");
+                        } else {
+                            for(Vehicle vehicle: list) {System.out.println(vehicle);}
                         }
                         break;
                     case "rent":
-                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
-                        if (r.isEmpty()) {
-                            Rental rental = Rental.builder()
-                                    .id(null)
-                                    .userId(user.getId())
-                                    .vehicleId(split[1])
-                                    .rentDateTime(new Date())
-                                    .returnDateTime(null)
-                                    .build();
-                            rentalRepo.save(rental);
+                        multipleChoice = inputHandler.getMultipleStrings("Input ID of the car that you want to rent.",1);
+                        if(rentalService.rent(user.getId(),multipleChoice[0])) {
+                            System.out.println("Rented the car successfully.");
+                        } else {
+                            System.out.println("Couldn't rent the car.");
                         }
                         break;
                     case "return":
-                        r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
-                        if (r.isPresent()) {
-                            r.get().setReturnDateTime(new Date());
-                            rentalRepo.save(r.get());
+                        if (rentalService.returnVehicle(user.getId())) {
+                            System.out.println("Vehicle returned successfully.");
+                        } else {
+                            System.out.println("Catalog: ");
+                            System.out.println("No rentals to return.");
                         }
+
                         break;
                     case "exit":
                         return;
@@ -96,43 +91,40 @@ public class UIconsole {
         }
         else if (user.getRole().equals("ADMIN")) {
             while(true){
-                System.out.println("Possible options: \n" +
-                        "show | add :TYPE_OF_VEHICLE;BRAND;MODEL;YEAR;PLATE;PRICE;(ATTRIBUTE;ATTRIBUTE2): | remove :id: | exit");
-                String input = scanner.nextLine();
-                String[] split = input.split(" ");
-                switch (split[0]) {
+                choice = inputHandler.readSingleChoice("Possible options: \n" +
+                        "show | add | remove | exit","show","add","remove","exit");
+                switch (choice) {
                     case "show":
-                        List<Vehicle> list = vehicleService.findAllVehicles();
-                        System.out.println("Catalog:");
-                        for(Vehicle vehicle: list) {
-                            System.out.println(vehicle);
+                        List<Vehicle> list = rentalService.getAvailableVehicles();
+                        if (list.isEmpty()) {
+                            System.out.println("No vehicles available currently.");
+                        } else {
+                            System.out.println("Catalog: ");
+                            for(Vehicle vehicle: list) {System.out.println(vehicle);}
                         }
                         break;
                     case "add":
-                        String[] sp = split[1].split(";");
-                        Vehicle vehicle = Vehicle.builder()
-                                    .id(null)
-                                    .typeOfVehicle(sp[0])
-                                    .brand(sp[1])
-                                    .model(sp[2])
-                                    .year(Integer.parseInt(sp[3]))
-                                    .plate(sp[4])
-                                    .price(Integer.parseInt(sp[5]))
-                                    .attributes(null)
-                                    .build();
-                        if (sp.length > 6) {
-                            int i = 6;
-                            while (i+1 < sp.length) {
-                                vehicle.addAttribute(sp[i],sp[i+1]);
-                                i = i+2;
+                        Vehicle vehicle = vehicleService.createVehicle(inputHandler.getMultipleStrings("Please input these field separated by whitespace.\nTYPE_OF_VEHICLE BRAND MODEL YEAR PLATE PRICE",6));
+                        choice = inputHandler.readSingleChoice("Do you want to add attributes? [Y/N]","Y","N");
+                        if (choice.equals("Y")) {
+                            multipleChoice = inputHandler.getMultipleStrings("How many attributes do you want to add? Number: ", 1);
+                            int num = Integer.parseInt(multipleChoice[0]);
+                            for (int i = 0; i<num; i++) {
+                                multipleChoice = inputHandler.getMultipleStrings("Input attribute and a value separated by whitespace",2);
+                                vehicleService.addAttributes(multipleChoice[0],multipleChoice[1],vehicle);
                             }
+                        } else {
+                            System.out.println("No attributes will be added.");
                         }
                         vehicleService.addVehicle(vehicle);
                         break;
                     case "remove":
-                        r = rentalRepo.findByVehicleIdAndReturnDateIsNull(split[1]);
-                        if (r.isEmpty()) {
-                            vehicleService.deleteVehicleById(split[1]);
+                        multipleChoice = inputHandler.getMultipleStrings("Which vehicle do you want to delete? ID: ", 1);
+                        if (rentalService.findByVehicleIdAndReturnDateIsNull(multipleChoice[0]).isEmpty()) {
+                            vehicleService.deleteVehicleById(multipleChoice[0]);
+                            System.out.println("Successfully deleted selected vehicle.");
+                        } else {
+                            System.out.println("Something went wrong while deleting selected vehicle.");
                         }
                         break;
                     case "exit":
