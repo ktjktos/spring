@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 import lombok.*;
 @Getter
 @Setter
@@ -20,5 +20,9 @@ public class User {
                 .password(password)
                 .role(role)
                 .build();
+    }
+
+    public String toString() {
+        return id + "|" + login + ": " + role;
     }
 }

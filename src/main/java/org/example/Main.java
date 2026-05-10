@@ -1,18 +1,34 @@
 package org.example;
 
+import org.example.repository.*;
+import org.example.service.*;
+import org.example.ui.InputHandler;
+import org.example.ui.UIconsole;
+import org.example.validator.VehicleValidator;
+
 public class Main {
     public static void main(String[] args) {
-        VehicleRepositoryImpl vehicleRepo = new VehicleRepositoryImpl();
+        VehicleRepository vehicleRepo = new VehicleRepository();
         UserRepository userRepo = new UserRepository();
-        AuthService authService = new AuthService(userRepo);
         RentalRepository rentalRepo = new RentalRepository();
 
+        IVehicleCategoryConfigRepository configRepository = new VehicleCategoryConfigRepository();
+        VehicleCategoryConfigService configService = new VehicleCategoryConfigService(configRepository);
+        VehicleValidator vehicleValidator = new VehicleValidator(configService);
+
+        VehicleService vehicleService = new VehicleService(vehicleValidator,vehicleRepo);
+        UserService userService = new UserService(userRepo);
+        RentalService rentalService = new RentalService(rentalRepo,vehicleService,userService);
+
+        AuthService authService = new AuthService(userService);
+
         UIconsole console = UIconsole.builder()
-                        .vehicleRepo(vehicleRepo)
-                        .userRepo(userRepo)
-                        .authService(authService)
-                        .rentalRepo(rentalRepo)
-                        .build();
+                .vehicleService(vehicleService)
+                .userService(userService)
+                .authService(authService)
+                .rentalService(rentalService)
+                .inputHandler(new InputHandler())
+                .build();
         console.run();
     }
 }

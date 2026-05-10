@@ -12,16 +12,27 @@
     }
   },
   {
+    "id": "3",
+    "typeOfVehicle": "CAR",
+    "brand": "Ford",
+    "model": "Mondeo",
+    "year": 2018,
+    "plate": "ABCDEF",
+    "price": 500,
+    "attributes": {
+      "fuelType": "octane"
+    }
+  },
+  {
     "id": "2",
-    "typeOfVehicle": "Car",
+    "typeOfVehicle": "CAR",
     "brand": "Chevrolet",
     "model": "Impala",
     "year": 1967,
     "plate": "KAZ2Y5",
-    "price": 999,
+    "price": 10000,
     "attributes": {
-      "color": "black",
-      "engine": "327"
+      "fuelType": "octane"
     }
   }
 ]

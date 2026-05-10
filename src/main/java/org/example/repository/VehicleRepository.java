@@ -1,18 +1,20 @@
-package org.example;
+package org.example.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.example.model.Vehicle;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-public class VehicleRepositoryImpl implements IVehicleRepository{
-    List<Vehicle> vehicles;
-    Set<Integer> existingIDs = new HashSet<>();
-    public VehicleRepositoryImpl() {
+public class VehicleRepository implements IVehicleRepository{
+    private List<Vehicle> vehicles;
+    private Set<Integer> existingIDs = new HashSet<>();
+    public VehicleRepository() {
         Path path = Path.of("vehicles.json");
         vehicles = new ArrayList<>();
         try {

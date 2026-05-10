@@ -1,8 +1,10 @@
-package org.example;
+package org.example.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.example.model.User;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,8 +13,8 @@ import java.util.*;
 
 public class UserRepository implements IUserRepository{
 
-    List<User> users;
-    Set<Integer> existingIDs = new HashSet<>();
+    private List<User> users;
+    private Set<Integer> existingIDs = new HashSet<>();
 
     public UserRepository() {
         Path path = Path.of("users.json");
@@ -79,15 +81,16 @@ public class UserRepository implements IUserRepository{
         }
         return Optional.empty();
     }
-    public void deleteById (String id) {
+    public boolean deleteById (String id) {
         for(User user: users) {
             if (user.getId().equals(id)) {
                 users.remove(user);
                 existingIDs.remove(Integer.parseInt(id));
                 this.writeToFile();
-                break;
+                return true;
             }
         }
+        return false;
     }
     public void writeToFile() {
         try {

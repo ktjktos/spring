@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 
 import lombok.*;
 
@@ -65,5 +65,9 @@ public class Vehicle {
             sb.append(" | Attributes: ").append(attributes);
         }
         return sb.toString();
+    }
+
+    public void clearAttributes() {
+        attributes.clear();
     }
 }
