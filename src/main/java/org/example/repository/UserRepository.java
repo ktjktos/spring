@@ -14,7 +14,6 @@ import java.util.*;
 public class UserRepository implements IUserRepository{
 
     private List<User> users;
-    private Set<Integer> existingIDs = new HashSet<>();
 
     public UserRepository() {
         Path path = Path.of("users.json");
@@ -29,11 +28,7 @@ public class UserRepository implements IUserRepository{
         } catch (IOException e) {
             System.out.println("cos poszlo nie tak w ladowaniu userRepo");
         }
-        if (this.users != null) {
-            for (User u : users) {
-                existingIDs.add(Integer.parseInt(u.getId()));
-            }
-        } else {
+        if (this.users == null) {
             this.users = new ArrayList<>();
         }
     }
@@ -49,16 +44,8 @@ public class UserRepository implements IUserRepository{
     }
 
     public User save(User user) {
-        int id = 1;
-        if (user.getId() == null) {
-            while(existingIDs.contains(id)) { id+=1;}
-            existingIDs.add(id);
-            user.setId(Integer.toString(id));
-            users.add(user);
-        } else {
-            users.remove(user);
-            users.add(user);
-        }
+        users.remove(user);
+        users.add(user);
         this.writeToFile();
         return user;
     }
@@ -85,7 +72,6 @@ public class UserRepository implements IUserRepository{
         for(User user: users) {
             if (user.getId().equals(id)) {
                 users.remove(user);
-                existingIDs.remove(Integer.parseInt(id));
                 this.writeToFile();
                 return true;
             }

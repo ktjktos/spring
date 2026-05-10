@@ -13,7 +13,6 @@ import java.util.*;
 
 public class RentalRepository implements IRentalRepository {
     private List<Rental> rentals;
-    private Set<Integer> existingIDs = new HashSet<>();
 
     public RentalRepository() {
         Path path = Path.of("rentals.json");
@@ -28,11 +27,7 @@ public class RentalRepository implements IRentalRepository {
         } catch (IOException e) {
             System.out.println("cos poszlo nie tak w ladowaniu rentalRepo");
         }
-        if (this.rentals != null) {
-            for (Rental r : rentals) {
-                existingIDs.add(Integer.parseInt(r.getId()));
-            }
-        } else {
+        if (this.rentals == null) {
             this.rentals = new ArrayList<>();
         }
     }
@@ -56,16 +51,8 @@ public class RentalRepository implements IRentalRepository {
     }
 
     public Rental save(Rental rental) {
-        int id = 1;
-        if (rental.getId() == null) {
-            while(existingIDs.contains(id)) { id+=1;}
-            existingIDs.add(id);
-            rental.setId(Integer.toString(id));
-            rentals.add(rental);
-        } else {
-            rentals.remove(rental);
-            rentals.add(rental);
-        }
+        rentals.remove(rental);
+        rentals.add(rental);
         this.writeToFile();
         return rental;
     }
@@ -74,7 +61,6 @@ public class RentalRepository implements IRentalRepository {
         for(Rental rental: rentals) {
             if (rental.getId().equals(id)) {
                 rentals.remove(rental);
-                existingIDs.remove(Integer.parseInt(id));
                 this.writeToFile();
                 break;
             }

@@ -34,5 +34,17 @@
     "attributes": {
       "fuelType": "octane"
     }
+  },
+  {
+    "id": "6445ff82-0fc8-4d72-9816-847fd9e6b881",
+    "typeOfVehicle": "Car",
+    "brand": "Test",
+    "model": "Test",
+    "year": 1000,
+    "plate": "abcdef",
+    "price": 1000,
+    "attributes": {
+      "fuelType": "test"
+    }
   }
 ]
