@@ -145,6 +145,7 @@ public class UIconsole {
                                     break;
                                 }
                                 catch(Exception e) {
+                                    e.printStackTrace();
                                     System.out.println("Wrong attributes! try again.");
                                     vehicle.clearAttributes();
                                 }

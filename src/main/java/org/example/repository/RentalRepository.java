@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-public class RentalRepository {
+public class RentalRepository implements IRentalRepository {
     private List<Rental> rentals;
     private Set<Integer> existingIDs = new HashSet<>();
 

@@ -1,16 +1,16 @@
 package org.example.service;
 
 import org.example.model.User;
-import org.example.repository.UserRepository;
+import org.example.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 public class UserService {
 
-    UserRepository userRepo;
+    IUserRepository userRepo;
 
-    public UserService(UserRepository userRepo) {
+    public UserService(IUserRepository userRepo) {
         this.userRepo = userRepo;
     }
 

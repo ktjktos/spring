@@ -3,19 +3,19 @@ package org.example.service;
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
+import org.example.repository.IVehicleRepository;
 import org.example.validator.VehicleValidator;
 import org.example.model.Vehicle;
-import org.example.repository.VehicleRepository;
 
 @AllArgsConstructor
 
 public class VehicleService {
     private VehicleValidator vehicleValidator;
-    private VehicleRepository vehicleRepo;
+    private IVehicleRepository vehicleRepo;
 
     public Vehicle createVehicle (String[] split) {
         Vehicle vehicle = Vehicle.builder()
-                .id(null)
+                .id(java.util.UUID.randomUUID().toString())
                 .typeOfVehicle(split[0])
                 .brand(split[1])
                 .model(split[2])

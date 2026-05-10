@@ -15,6 +15,7 @@ public class AuthService {
 
     public User register(String login, String password) {
         return userService.save(User.builder()
+                .id(java.util.UUID.randomUUID().toString())
                 .login(login)
                 .password(BCrypt.hashpw(password,BCrypt.gensalt()))
                 .role("USER")

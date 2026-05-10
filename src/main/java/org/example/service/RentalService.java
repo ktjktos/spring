@@ -1,21 +1,18 @@
 package org.example.service;
 
 import org.example.model.Rental;
-import org.example.model.User;
 import org.example.model.Vehicle;
-import org.example.repository.RentalRepository;
-import org.example.repository.UserRepository;
-
+import org.example.repository.IRentalRepository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class RentalService {
-    RentalRepository rentalRepo;
+    IRentalRepository rentalRepo;
     VehicleService vehicleService;
     UserService userService;
-    public RentalService(RentalRepository rentalRepo, VehicleService vehicleService, UserService userService) {
+    public RentalService(IRentalRepository rentalRepo, VehicleService vehicleService, UserService userService) {
         this.vehicleService = vehicleService;
         this.rentalRepo = rentalRepo;
         this.userService = userService;
@@ -63,7 +60,7 @@ public class RentalService {
         Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userID);
         if (r.isEmpty()) {
             Rental rental = Rental.builder()
-                    .id(null)
+                    .id(java.util.UUID.randomUUID().toString())
                     .userId(userID)
                     .vehicleId(vehicleID)
                     .rentDateTime(new Date())
