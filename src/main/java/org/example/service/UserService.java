@@ -6,7 +6,7 @@ import org.example.repository.IUserRepository;
 import java.util.List;
 import java.util.Optional;
 
-public class UserService {
+public class UserService implements IUserService {
 
     IUserRepository userRepo;
 
@@ -22,15 +22,17 @@ public class UserService {
         return this.userRepo.findByLogin(login);
     }
 
-    public String displayCredentials(User user) {
-        return user.getLogin() + " " + user.getRole();
+    public void deleteUser(String id, String loggedUserId) {
+        if (findById(loggedUserId).getRole().equals("Admin")) {
+            this.userRepo.deleteById(id);
+        }
     }
 
-    public boolean deleteUser(String id) {
-        return this.userRepo.deleteById(id);
+    public User findById(String id) {
+        return this.userRepo.findById(id).orElse(null);
     }
 
-    public List<User> getAll() {
+    public List<User> findAllUsers() {
         return userRepo.findAll();
     }
 }

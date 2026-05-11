@@ -96,4 +96,14 @@ public class RentalRepository implements IRentalRepository {
             System.out.println("cos poszlo nie tak w zapisywaniu rentalsRepo");
         }
     }
+
+    public List<Rental> findUserRentals(String userId) {
+        List<Rental> r = new ArrayList<>();
+        for (Rental rental : rentals) {
+            if (rental.getUserId().equals(userId)) {
+                r.add(rental.copy());
+            }
+        }
+        return r;
+    }
 }

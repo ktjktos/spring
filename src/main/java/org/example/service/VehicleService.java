@@ -1,7 +1,6 @@
 package org.example.service;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.*;
 import org.example.repository.IVehicleRepository;
 import org.example.validator.VehicleValidator;
@@ -9,7 +8,7 @@ import org.example.model.Vehicle;
 
 @AllArgsConstructor
 
-public class VehicleService {
+public class VehicleService implements IVehicleService {
     private VehicleValidator vehicleValidator;
     private IVehicleRepository vehicleRepo;
 
@@ -45,7 +44,7 @@ public class VehicleService {
         vehicleRepo.deleteById(id);
     }
 
-    public Optional<Vehicle> findVehicleById(String id) {
+    public Vehicle findById(String id) {
         return vehicleRepo.findById(id);
     }
 }

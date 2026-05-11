@@ -1,62 +1,28 @@
 package org.example.service;
 
 import org.example.model.Rental;
-import org.example.model.Vehicle;
 import org.example.repository.IRentalRepository;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class RentalService {
+public class RentalService implements IRentalService {
+
     IRentalRepository rentalRepo;
-    VehicleService vehicleService;
-    UserService userService;
-    public RentalService(IRentalRepository rentalRepo, VehicleService vehicleService, UserService userService) {
-        this.vehicleService = vehicleService;
+
+    public RentalService(IRentalRepository rentalRepo) {
         this.rentalRepo = rentalRepo;
-        this.userService = userService;
     }
 
-    public String whatVehicleIsRented(String userID) {
-        Optional<Rental> rental = rentalRepo.findByUserIdAndReturnDateIsNull(userID);
-        if (rental.isPresent()) {
-            return vehicleService.findVehicleById(rental.get().getVehicleId()).get().toString();
-        } else {
-            return "Obecnie nie ma wypozyczonego pojazdu.";
-        }
+    public Optional<Rental> findActiveRentalByUserId(String userID) {
+        return rentalRepo.findByUserIdAndReturnDateIsNull(userID);
     }
 
-    public List<String> getRentalVehicleIDs() {
-        List<String> ret = new ArrayList<>();
-        List<Rental> l = rentalRepo.findAll();
-
-        for (Rental rental: l) {
-            if (rental.getReturnDateTime() == null) {
-                if (!ret.contains(rental.getVehicleId())) {
-                    ret.add(rental.getVehicleId());
-                }
-            }
-        }
-        return ret;
+    public List<Rental> findAllRentals() {
+        return rentalRepo.findAll();
     }
 
-    public List<Vehicle> getAvailableVehicles() {
-        List<String> rentedVehicleIDs = getRentalVehicleIDs();
-        List<Vehicle> vehicles = vehicleService.findAllVehicles();
-        List<Vehicle> ret = new ArrayList<>();
-
-        for (Vehicle vehicle: vehicles) {
-            if(!rentedVehicleIDs.contains(vehicle.getId())) {
-                ret.add(vehicle);
-            }
-        }
-
-        return ret;
-
-    }
-
-    public boolean rent(String userID,String vehicleID) {
+    public Rental rentVehicle(String userID,String vehicleID) {
         Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userID);
         if (r.isEmpty()) {
             Rental rental = Rental.builder()
@@ -67,49 +33,34 @@ public class RentalService {
                     .returnDateTime(null)
                     .build();
             rentalRepo.save(rental);
-            return true;
+            return rental;
         }
-        return false;
+        return null;
     }
 
-    public boolean returnVehicle(String userID) {
-        Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userID);
+    public Rental returnVehicle(String userId) {
+        Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userId);
         if (r.isPresent()) {
             r.get().setReturnDateTime(new Date());
             rentalRepo.save(r.get());
-            return true;
+            return r.get();
         }
-        return false;
+        return null;
     }
 
-    public Optional<Rental> findByVehicleIdAndReturnDateIsNull(String vehicleID) {
+    public Optional<Rental> findActiveRentalByVehicleId(String vehicleID) {
         return rentalRepo.findByVehicleIdAndReturnDateIsNull(vehicleID);
     }
 
-    public Optional<Rental> findByUserIdAndReturnDateIsNull(String userID) {
-        return rentalRepo.findByUserIdAndReturnDateIsNull(userID);
+    public List<Rental> findUserRentals(String userId) {
+        return rentalRepo.findUserRentals(userId);
     }
 
-    public boolean removeVehicle(String id) {
-        if (findByVehicleIdAndReturnDateIsNull(id).isEmpty()) {
-            vehicleService.deleteVehicleById(id);
-            System.out.println("Successfully deleted selected vehicle.");
-            return true;
-        } else {
-            System.out.println("Something went wrong while deleting selected vehicle.");
-        }
-        return false;
+    public boolean userHasActiveRental(String userId) {
+        return findActiveRentalByUserId(userId).isPresent();
     }
 
-    public boolean removeUser(String id) {
-        if (findByUserIdAndReturnDateIsNull(id).isEmpty()) {
-            if (userService.deleteUser(id)) {
-                System.out.println("Successfully deleted selected user.");
-                return true;
-            }
-        } else {
-            System.out.println("Something went wrong while deleting selected user.");
-        }
-        return false;
+    public boolean vehicleHasActiveRental(String vehicleId) {
+        return findActiveRentalByVehicleId(vehicleId).isPresent();
     }
 }

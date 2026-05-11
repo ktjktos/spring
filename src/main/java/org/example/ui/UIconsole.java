@@ -111,7 +111,7 @@ public class UIconsole {
                         }
                         break;
                     case "showUsers":
-                        List<User> users = userService.getAll();
+                        List<User> users = userService.findAllUsers();
                         if (users.isEmpty()) {
                             System.out.println("No users are currently registered.");
                         } else {
