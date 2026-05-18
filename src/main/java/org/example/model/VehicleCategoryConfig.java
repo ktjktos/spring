@@ -29,4 +29,8 @@ public class VehicleCategoryConfig {
                 .attributes(new HashMap<>(attributes))
                 .build();
     }
+
+    public String toString() {
+        return category + " " + attributes;
+    }
 }

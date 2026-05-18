@@ -106,4 +106,14 @@ public class RentalRepository implements IRentalRepository {
         }
         return r;
     }
+
+    public void deleteByVehicleId(String VehicleId) {
+        for(Rental rental: rentals) {
+            if (rental.getVehicleId().equals(VehicleId)) {
+                rentals.remove(rental);
+                this.writeToFile();
+                break;
+            }
+        }
+    }
 }

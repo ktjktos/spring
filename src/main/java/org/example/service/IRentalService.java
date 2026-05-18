@@ -23,4 +23,5 @@ public interface IRentalService {
     boolean vehicleHasActiveRental(String vehicleId);
 
     Optional<Rental> findActiveRentalByVehicleId(String vehicleID);
+    void deleteByVehicleId(String vehicleId);
 }

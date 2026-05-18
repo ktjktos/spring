@@ -158,4 +158,34 @@ public class RentalJdbcRepository implements IRentalRepository {
         }
         return Optional.empty();
     }
+
+    public void deleteByVehicleId(String vehicleId) {
+        String sql = "DELETE FROM rental WHERE vehicle_id = ?";
+        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, vehicleId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting rental", e);
+        }
+    }
+
+    public List<Rental> findUserRentals(String userId) {
+        List<Rental> rentals = new ArrayList<>();
+        String sql = "SELECT id, vehicle_id, user_id, rent_date, return_date FROM rental WHERE user_id = ?";
+
+        try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    rentals.add(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error occurred while finding user rentals", e);
+        }
+
+        return rentals;
+    }
 }

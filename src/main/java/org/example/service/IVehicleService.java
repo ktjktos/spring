@@ -17,4 +17,5 @@ public interface IVehicleService {
     void removeVehicle(String vehicleId);
 
     boolean isVehicleRented(String vehicleId);
+    boolean vehicleExists(String vehicleId);
 }

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.model.User;
+import org.example.repository.IRentalRepository;
 import org.example.repository.IUserRepository;
 
 import java.util.List;
@@ -9,9 +10,11 @@ import java.util.Optional;
 public class UserService implements IUserService {
 
     IUserRepository userRepo;
+    IRentalService rentalService;
 
-    public UserService(IUserRepository userRepo) {
+    public UserService(IUserRepository userRepo, IRentalService rentalService) {
         this.userRepo = userRepo;
+        this.rentalService = rentalService;
     }
 
     public User save(User user) {
@@ -23,7 +26,7 @@ public class UserService implements IUserService {
     }
 
     public void deleteUser(String id, String loggedUserId) {
-        if (findById(loggedUserId).getRole().equals("Admin")) {
+        if (findById(loggedUserId).getRole().equals("ADMIN") && this.rentalService.findUserRentals(id).isEmpty()) {
             this.userRepo.deleteById(id);
         }
     }

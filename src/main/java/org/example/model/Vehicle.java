@@ -60,10 +60,11 @@ public class Vehicle {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(id).append("| ").append(brand).append(" ").append(model).append(" ").append(year).append(" price: ").append(price).append(" PLN");
-        if (!attributes.isEmpty()) {
-            sb.append(" | Attributes: ").append(attributes);
-        }
+//        sb.append(id).append("| ").append(brand).append(" ").append(model).append(" ").append(year).append(" price: ").append(price).append(" PLN");
+//        if (!attributes.isEmpty()) {
+//            sb.append(" | Attributes: ").append(attributes);
+//        }
+        sb.append(brand).append(" ").append(model).append(" ").append(year);
         return sb.toString();
     }
 

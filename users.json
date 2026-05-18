@@ -1,11 +1,5 @@
 [
   {
-    "id": "1",
-    "login": "user",
-    "password": "$2a$10$OvrGgAQ2srWiUEp3Q8DdlOJOwKh/u2nxh.HSRygsOBNwWuc7mdwBK",
-    "role": "USER"
-  },
-  {
     "id": "2",
     "login": "admin",
     "password": "$2a$10$OvrGgAQ2srWiUEp3Q8DdlOJOwKh/u2nxh.HSRygsOBNwWuc7mdwBK",
@@ -15,6 +9,18 @@
     "id": "3",
     "login": "Sam",
     "password": "$2a$10$2zO79yDU06btlByTiECHqeSOslfgZv.n.6efrVBEMZBqtZ1112fTq",
+    "role": "USER"
+  },
+  {
+    "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
+    "login": "user",
+    "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
+    "role": "USER"
+  },
+  {
+    "id": "87b8b284-a763-452e-96e0-f61dccc3b32f",
+    "login": "user2",
+    "password": "$2a$10$HbQOoSe0.dqI9o4hvA1mP.DGxKTutBtJNMBjmRuXuEE.hKRE3yWHO",
     "role": "USER"
   }
 ]

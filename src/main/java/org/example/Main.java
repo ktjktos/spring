@@ -24,9 +24,9 @@ public class Main {
             VehicleCategoryConfigService configService = new VehicleCategoryConfigService(configRepository);
             VehicleValidator vehicleValidator = new VehicleValidator(configService);
 
-            VehicleService vehicleService = new VehicleService(vehicleValidator, vehicleRepo);
-            UserService userService = new UserService(userRepo);
-            RentalService rentalService = new RentalService(rentalRepo, vehicleService, userService);
+            RentalService rentalService = new RentalService(rentalRepo);
+            UserService userService = new UserService(userRepo,rentalService);
+            VehicleService vehicleService = new VehicleService(vehicleValidator, vehicleRepo,rentalService);
             AuthService authService = new AuthService(userService);
 
             UIconsole console = UIconsole.builder()
@@ -34,7 +34,8 @@ public class Main {
                     .userService(userService)
                     .authService(authService)
                     .rentalService(rentalService)
-                    .inputHandler(new InputHandler())
+                    .vehicleCategoryConfigService(configService)
+                    .inputHandler(new InputHandler(vehicleService,rentalService,userService))
                     .build();
             console.run();
     }

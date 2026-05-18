@@ -63,4 +63,7 @@ public class RentalService implements IRentalService {
     public boolean vehicleHasActiveRental(String vehicleId) {
         return findActiveRentalByVehicleId(vehicleId).isPresent();
     }
+    public void deleteByVehicleId(String vehicleId) {
+        rentalRepo.deleteByVehicleId(vehicleId);
+    }
 }
