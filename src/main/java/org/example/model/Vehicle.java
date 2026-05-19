@@ -1,5 +1,9 @@
 package org.example.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.util.Collections;
@@ -11,8 +15,13 @@ import java.util.Map;
 @EqualsAndHashCode(of="id")
 @NoArgsConstructor
 
+@Entity
+@Table(name="vehicle")
 public class Vehicle {
+    @Id
+    @Column(nullable = false, unique = true)
     private String id;
+
     private String typeOfVehicle;
     private String brand;
     private String model;
