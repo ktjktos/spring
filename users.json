@@ -6,12 +6,6 @@
     "role": "ADMIN"
   },
   {
-    "id": "3",
-    "login": "Sam",
-    "password": "$2a$10$2zO79yDU06btlByTiECHqeSOslfgZv.n.6efrVBEMZBqtZ1112fTq",
-    "role": "USER"
-  },
-  {
     "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
     "login": "user",
     "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",

@@ -72,10 +72,10 @@ public class VehicleRepository implements IVehicleRepository{
     }
 
     @Override
-    public Vehicle findById(String id) {
+    public Optional<Vehicle> findById(String id) {
         for(Vehicle vehicle: vehicles){
-            if (vehicle.getId().equals(id)) return vehicle;
+            if (vehicle.getId().equals(id)) return Optional.of(vehicle);
         }
-        return null;
+        return Optional.empty();
     }
 }

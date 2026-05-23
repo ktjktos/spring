@@ -1,8 +1,9 @@
-package org.example.service;
+package org.example.simpleService;
 
 import org.example.model.Vehicle;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IVehicleService {
 
@@ -10,7 +11,7 @@ public interface IVehicleService {
 
     List<Vehicle> findAvailableVehicles();
 
-    Vehicle findById(String id);
+    Optional<Vehicle> findById(String id);
 
     Vehicle addVehicle(Vehicle vehicle);
 

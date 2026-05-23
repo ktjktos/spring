@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.simpleService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,33 +12,15 @@ import org.example.model.Vehicle;
 
 @AllArgsConstructor
 
-public class VehicleService implements IVehicleService {
+public class SimpleVehicleService implements IVehicleService {
     private VehicleValidator vehicleValidator;
     private IVehicleRepository vehicleRepo;
     private IRentalService rentalService;
-
-    public Vehicle createVehicle (String[] split) {
-        Vehicle vehicle = Vehicle.builder()
-                .id(java.util.UUID.randomUUID().toString())
-                .typeOfVehicle(split[0])
-                .brand(split[1])
-                .model(split[2])
-                .year(Integer.parseInt(split[3]))
-                .plate(split[4])
-                .price(Integer.parseInt(split[5]))
-                .attributes(null)
-                .build();
-        return vehicle;
-    }
 
     public Vehicle addVehicle(Vehicle vehicle) {
         vehicleValidator.validate(vehicle);
         vehicleRepo.save(vehicle);
         return vehicle;
-    }
-
-    public void addAttributes(String attribute, String value, Vehicle vehicle) {
-        vehicle.addAttribute(attribute,value);
     }
 
     public List<Vehicle> findAllVehicles() {
@@ -49,7 +31,7 @@ public class VehicleService implements IVehicleService {
         vehicleRepo.deleteById(id);
     }
 
-    public Vehicle findById(String id) {
+    public Optional<Vehicle> findById(String id) {
         return vehicleRepo.findById(id);
     }
 

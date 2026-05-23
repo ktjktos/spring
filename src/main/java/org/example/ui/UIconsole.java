@@ -5,27 +5,25 @@ import lombok.*;
 import org.example.model.User;
 import org.example.model.Vehicle;
 
-import org.example.model.VehicleCategoryConfig;
-import org.example.repository.RentalRepository;
-import org.example.service.*;
+import org.example.simpleService.*;
 
-import java.util.*;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Builder
 
 public class UIconsole {
 
-    VehicleCategoryConfigService vehicleCategoryConfigService;
-    VehicleService vehicleService;
-    UserService userService;
-    AuthService authService;
-    RentalService rentalService;
+    vehicleCategoryConfigService vehicleCategoryConfigService;
+    IVehicleService vehicleService;
+    IUserService userService;
+    IAuthService authService;
+    IRentalService rentalService;
 
     InputHandler inputHandler;
-    User user = null;
+    User user;
 
-    public void run() { // TODO: bugfixowac konsole
+    public void run() {
         String[] multipleChoice;
         String choice;
         loginLoop:
@@ -34,14 +32,15 @@ public class UIconsole {
             multipleChoice = inputHandler.getMultipleStrings("Input your login and password",2);
             switch(choice) {
                 case "register":
-                    if (authService.findByLogin(multipleChoice[0]).isPresent()) {
+                    if (userService.findByLogin(multipleChoice[0]).isPresent()) {
                         System.out.println("This login already exists.");
                     } else {
                         authService.register(multipleChoice[0],multipleChoice[1]);
                     }
                     break;
                 case "login":
-                    user = authService.login(multipleChoice[0],multipleChoice[1]);
+                    Optional<User> opUser = authService.login(multipleChoice[0],multipleChoice[1]);
+                    opUser.ifPresent(value -> user = value);
                     if (user != null) {
                         System.out.println("Successful authentication.");
                         break loginLoop;
@@ -65,8 +64,14 @@ public class UIconsole {
                     case "rent":
                         multipleChoice = inputHandler.getMultipleStrings("Input ID number of the car that you want to rent.",1);
                         if (!vehicleService.isVehicleRented(multipleChoice[0])) {
-                            if(rentalService.rentVehicle(user.getId(),multipleChoice[0]) != null) {
-                                System.out.println("Rented the car successfully.");
+                            Optional<Vehicle> vehicle = vehicleService.findById(multipleChoice[0]);
+                            if (vehicle.isPresent()) {
+                                try {
+                                    rentalService.rentVehicle(user, vehicle.get());
+                                    System.out.println("Rented the car successfully.");
+                                } catch (IllegalStateException | IllegalArgumentException e) {
+                                    System.out.println("Error: " + e.getMessage());
+                                }
                             } else {
                                 System.out.println("Couldn't rent the car.");
                             }
@@ -75,10 +80,11 @@ public class UIconsole {
                         }
                         break;
                     case "return":
-                        if (rentalService.returnVehicle(user.getId()) != null) {
+                        try {
+                            rentalService.returnVehicle(user.getId());
                             System.out.println("Vehicle returned successfully.");
-                        } else {
-                            System.out.println("Couldn't return the car.");
+                        } catch (IllegalStateException e) {
+                            System.out.println("Error: " + e.getMessage());
                         }
                         break;
                     case "showRentalHistory":
@@ -102,12 +108,15 @@ public class UIconsole {
                         inputHandler.displayAllUsers(userService.findAllUsers());
                         break;
                     case "add":
-                        Vehicle vehicle = vehicleService.createVehicle(inputHandler.getMultipleStrings("Please input these fields separated by whitespace.\nTYPE_OF_VEHICLE BRAND MODEL YEAR PLATE PRICE" +
-                                "\nExample: Car Chevrolet Impala 1967 KAZ2Y5 1000",6));
-                        inputHandler.displayRequiredAttributes(vehicleCategoryConfigService.findAllCategories()); //TODO: BUGFIX
+                        Vehicle vehicle = inputHandler.createVehicleFromInput(inputHandler.getMultipleStrings("""
+                                Please input these fields separated by whitespace.
+                                TYPE_OF_VEHICLE BRAND MODEL YEAR PLATE PRICE\
+                                
+                                Example: Car Chevrolet Impala 1967 KAZ2Y5 1000""",6));
+                        inputHandler.displayRequiredAttributes(vehicleCategoryConfigService.findAllCategories());
                         while(true) {
                             multipleChoice = inputHandler.getMultipleStrings("Input attribute and a value separated by whitespace",2);
-                            vehicleService.addAttributes(multipleChoice[0],multipleChoice[1],vehicle);
+                            vehicle.addAttribute(multipleChoice[0],multipleChoice[1]);
                             choice = inputHandler.readSingleChoice("Do you want to add more attributes? [Y/N]","Y","N");
                             if (choice.equals("N")) {
                                 try {
@@ -125,12 +134,22 @@ public class UIconsole {
                     case "removeVehicle":
                         inputHandler.displayAllVehicles(vehicleService.findAllVehicles());
                         multipleChoice = inputHandler.getMultipleStrings("Which vehicle do you want to delete? ID: ", 1);
-                        vehicleService.removeVehicle(multipleChoice[0]);
+                        try {
+                            vehicleService.removeVehicle(multipleChoice[0]);
+                            //System.out.println("Successfully removed the vehicle.");
+                        } catch (IllegalStateException | IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
                         break;
                     case "removeUser":
                         inputHandler.displayAllUsersToRemove(userService.findAllUsers());
                         multipleChoice = inputHandler.getMultipleStrings("Which user do you want to delete? ID: ", 1);
-                        userService.deleteUser(multipleChoice[0],user.getId());
+                        try {
+                            userService.deleteUser(multipleChoice[0], user.getId());
+                            //System.out.println("Successfully removed the user.");
+                        } catch (SecurityException | IllegalStateException | IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
                         break;
                     case "showUserRentalHistory":
                         inputHandler.displayAllUsersWithHistory(userService.findAllUsers());

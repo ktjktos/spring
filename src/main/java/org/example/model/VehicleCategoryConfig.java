@@ -31,6 +31,11 @@ public class VehicleCategoryConfig {
     }
 
     public String toString() {
-        return category + " " + attributes;
+        StringBuilder sb = new StringBuilder();;
+        sb.append(category).append(" attributes:\n").append(" ");
+        attributes.forEach((key,value) -> {
+            sb.append(key).append(": ").append(value).append("\n ");
+        });
+        return sb.toString();
     }
 }

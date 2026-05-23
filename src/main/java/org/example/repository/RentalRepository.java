@@ -14,7 +14,7 @@ import java.util.*;
 public class RentalRepository implements IRentalRepository {
     private List<Rental> rentals;
 
-    public RentalRepository() {
+    public RentalRepository(IUserRepository userRepo, IVehicleRepository vehicleRepo) {
         Path path = Path.of("rentals.json");
         rentals = new ArrayList<>();
         try {

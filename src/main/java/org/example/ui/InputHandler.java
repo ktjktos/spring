@@ -4,9 +4,9 @@ import org.example.model.Rental;
 import org.example.model.User;
 import org.example.model.Vehicle;
 import org.example.model.VehicleCategoryConfig;
-import org.example.service.IRentalService;
-import org.example.service.IUserService;
-import org.example.service.IVehicleService;
+import org.example.simpleService.IRentalService;
+import org.example.simpleService.IUserService;
+import org.example.simpleService.IVehicleService;
 
 import java.util.List;
 import java.util.Map;
@@ -60,7 +60,8 @@ public class InputHandler {
     public void displayUserRental(Optional<Rental> rental) {
         if (rental.isPresent()) {
             System.out.println("Active rentals:");
-            System.out.println(vehicleService.findById(rental.get().getVehicleId()));
+            Optional<Vehicle> vehicle = vehicleService.findById(rental.get().getVehicleId());
+            vehicle.ifPresent(System.out::println);
         } else {
             System.out.println("No active rentals.");
         }
@@ -72,8 +73,11 @@ public class InputHandler {
         try {
             System.out.println("Rental history:");
             for(Rental rental: rentals) {
-                System.out.println(num + "| " + vehicleService.findById(rental.getVehicleId()));
-                num++;
+                Optional<Vehicle> vehicle = vehicleService.findById(rental.getVehicleId());
+                if (vehicle.isPresent()) {
+                    System.out.println(num + "| " + vehicle.get());
+                    num++;
+                }
             }
         } catch (Exception e) {
             System.out.println("No active rentals.");
@@ -85,7 +89,10 @@ public class InputHandler {
         sb.append(vehicle.getId()).append("| ").append(vehicle.getBrand()).append(" ").append(vehicle.getModel()).append(" ").append(vehicle.getYear()).append(" price: ").append(vehicle.getPrice()).append(" PLN");
         Map<String,Object> attributes = vehicle.getAttributes();
         if (!attributes.isEmpty()) {
-            sb.append(" | Attributes: ").append(attributes);
+            sb.append("\nAttributes:\n ");
+            attributes.forEach((key,value) -> {
+                sb.append(key).append(": ").append(value).append("\n ");
+            });
         }
         System.out.println(sb);
     }
@@ -106,9 +113,9 @@ public class InputHandler {
         for(Vehicle vehicle: vehicles) {
             displayVehicle(vehicle);
             if (rentalService.vehicleHasActiveRental(vehicle.getId())) {
-                System.out.println("^^^ CURRENTLY RENTED ^^^");
+                System.out.println("^^^ CURRENTLY RENTED ^^^" + "\n");
             } else {
-                System.out.println("^^^ NOT RENTED ^^^");
+                System.out.println("^^^ NOT RENTED ^^^" + "\n");
             }
 
         }
@@ -152,5 +159,19 @@ public class InputHandler {
         for (VehicleCategoryConfig config: attributes) {
             System.out.println(config);
         }
+    }
+
+    public Vehicle createVehicleFromInput (String[] split) {
+        Vehicle vehicle = Vehicle.builder()
+                .id(java.util.UUID.randomUUID().toString())
+                .typeOfVehicle(split[0])
+                .brand(split[1])
+                .model(split[2])
+                .year(Integer.parseInt(split[3]))
+                .plate(split[4])
+                .price(Integer.parseInt(split[5]))
+                .attributes(null)
+                .build();
+        return vehicle;
     }
 }

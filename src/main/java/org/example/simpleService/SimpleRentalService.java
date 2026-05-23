@@ -1,16 +1,19 @@
-package org.example.service;
+package org.example.simpleService;
 
 import org.example.model.Rental;
+import org.example.model.User;
+import org.example.model.Vehicle;
 import org.example.repository.IRentalRepository;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class RentalService implements IRentalService {
+public class SimpleRentalService implements IRentalService {
 
     IRentalRepository rentalRepo;
 
-    public RentalService(IRentalRepository rentalRepo) {
+    public SimpleRentalService(IRentalRepository rentalRepo) {
         this.rentalRepo = rentalRepo;
     }
 
@@ -22,14 +25,14 @@ public class RentalService implements IRentalService {
         return rentalRepo.findAll();
     }
 
-    public Rental rentVehicle(String userID,String vehicleID) {
-        Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userID);
+    public Rental rentVehicle(User user, Vehicle vehicle) {
+        Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(user.getId());
         if (r.isEmpty()) {
             Rental rental = Rental.builder()
                     .id(java.util.UUID.randomUUID().toString())
-                    .userId(userID)
-                    .vehicleId(vehicleID)
-                    .rentDateTime(new Date())
+                    .user(user)
+                    .vehicle(vehicle)
+                    .rentDateTime(LocalDateTime.now().toString())
                     .returnDateTime(null)
                     .build();
             rentalRepo.save(rental);
@@ -41,7 +44,7 @@ public class RentalService implements IRentalService {
     public Rental returnVehicle(String userId) {
         Optional<Rental> r = rentalRepo.findByUserIdAndReturnDateIsNull(userId);
         if (r.isPresent()) {
-            r.get().setReturnDateTime(new Date());
+            r.get().setReturnDateTime(LocalDateTime.now().toString());
             rentalRepo.save(r.get());
             return r.get();
         }

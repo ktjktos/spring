@@ -37,7 +37,7 @@ public class VehicleJdbcRepository implements IVehicleRepository {
     }
 
     @Override
-    public Vehicle findById(String id) {
+    public Optional<Vehicle> findById(String id) {
         String sql = "SELECT id, type_of_vehicle, brand, model, production_year, plate, price, attributes FROM vehicle WHERE id = ?";
         try (Connection connection = JdbcConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -45,13 +45,13 @@ public class VehicleJdbcRepository implements IVehicleRepository {
             stmt.setString(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return mapRow(rs);
+                    return Optional.ofNullable(mapRow(rs));
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error occurred while finding vehicle by id", e);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override

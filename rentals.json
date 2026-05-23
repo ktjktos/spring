@@ -1,16 +1,70 @@
 [
   {
-    "id": "f34835ae-83a7-4bec-98a0-be31adfd5ee0",
-    "vehicleId": "1",
-    "userId": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
-    "rentDateTime": "May 18, 2026, 11:05:58 PM",
-    "returnDateTime": "May 18, 2026, 11:17:41 PM"
+    "id": "e676b041-c0e2-43fa-97d6-b2d81d241832",
+    "vehicle": {
+      "id": "2",
+      "typeOfVehicle": "CAR",
+      "brand": "Chevrolet",
+      "model": "Impala",
+      "year": 1967,
+      "plate": "KAZ2Y5",
+      "price": 10000,
+      "attributes": {
+        "fuelType": "octane"
+      }
+    },
+    "user": {
+      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
+      "login": "user",
+      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
+      "role": "USER"
+    },
+    "rentDateTime": "2026-05-23T15:48:11.713575600",
+    "returnDateTime": "2026-05-23T15:57:10.141489400"
   },
   {
-    "id": "423e9818-7c98-4679-8f2d-a2262a1b2f7d",
-    "vehicleId": "2",
-    "userId": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
-    "rentDateTime": "May 18, 2026, 11:17:44 PM",
-    "returnDateTime": "May 18, 2026, 11:17:47 PM"
+    "id": "01f1f107-2359-49a2-87a5-f6d1bd4cabf5",
+    "vehicle": {
+      "id": "2",
+      "typeOfVehicle": "CAR",
+      "brand": "Chevrolet",
+      "model": "Impala",
+      "year": 1967,
+      "plate": "KAZ2Y5",
+      "price": 10000,
+      "attributes": {
+        "fuelType": "octane"
+      }
+    },
+    "user": {
+      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
+      "login": "user",
+      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
+      "role": "USER"
+    },
+    "rentDateTime": "2026-05-23T15:57:29.869739900",
+    "returnDateTime": "2026-05-23T15:57:37.482993400"
+  },
+  {
+    "id": "b936421e-b12d-4e21-a5c7-23b8b514e00d",
+    "vehicle": {
+      "id": "2",
+      "typeOfVehicle": "CAR",
+      "brand": "Chevrolet",
+      "model": "Impala",
+      "year": 1967,
+      "plate": "KAZ2Y5",
+      "price": 10000,
+      "attributes": {
+        "fuelType": "octane"
+      }
+    },
+    "user": {
+      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
+      "login": "user",
+      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
+      "role": "USER"
+    },
+    "rentDateTime": "2026-05-23T15:58:21.007348600"
   }
 ]

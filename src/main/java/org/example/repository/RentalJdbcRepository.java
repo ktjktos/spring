@@ -9,6 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class RentalJdbcRepository implements IRentalRepository {
+    IUserRepository userRepo;
+    IVehicleRepository vehicleRepo;
+    public RentalJdbcRepository(IUserRepository userRepo, IVehicleRepository vehicleRepo) {
+        this.userRepo = userRepo;
+        this.vehicleRepo = vehicleRepo;
+    }
+
     private final java.text.SimpleDateFormat isoFormatter = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     @Override
     public List<Rental> findAll() {
@@ -34,18 +41,13 @@ public class RentalJdbcRepository implements IRentalRepository {
     private Rental mapRow(ResultSet rs) throws SQLException {
         String rentDateStr = rs.getString("rent_date");
         String returnDateStr = rs.getString("return_date");
-        try {
-            return Rental.builder()
-                    .id(rs.getString("id"))
-                    .vehicleId(rs.getString("vehicle_id"))
-                    .userId(rs.getString("user_id"))
-                    .rentDateTime(rentDateStr != null ? isoFormatter.parse(rentDateStr) : null)
-                    .returnDateTime(returnDateStr != null ? isoFormatter.parse(returnDateStr) : null)
-                    .build();
-        } catch (java.text.ParseException e) {
-            System.out.println("wystapil blad w parsowaniu daty");
-            return null;
-        }
+        return Rental.builder()
+                .id(rs.getString("id"))
+                .vehicle(vehicleRepo.findById(rs.getString("vehicle_id")).get())
+                .user(userRepo.findById(rs.getString("user_id")).get())
+                .rentDateTime(rentDateStr)
+                .returnDateTime(returnDateStr)
+                .build();
     }
 
     @Override
@@ -86,8 +88,8 @@ public class RentalJdbcRepository implements IRentalRepository {
 
                     updateStmt.setString(1, rental.getVehicleId());
                     updateStmt.setString(2, rental.getUserId());
-                    updateStmt.setString(3, rental.getRentDateTime() != null ? isoFormatter.format(rental.getRentDateTime()) : null);
-                    updateStmt.setString(4, rental.getReturnDateTime() != null ? isoFormatter.format(rental.getReturnDateTime()) : null);
+                    updateStmt.setString(3, rental.getRentDateTime() != null ? rental.getRentDateTime() : null);
+                    updateStmt.setString(4, rental.getReturnDateTime() != null ? rental.getReturnDateTime() : null);
                     updateStmt.setString(5, rental.getId());
 
                     updateStmt.executeUpdate();
@@ -99,8 +101,8 @@ public class RentalJdbcRepository implements IRentalRepository {
                     insertStmt.setString(1, rental.getId());
                     insertStmt.setString(2, rental.getVehicleId());
                     insertStmt.setString(3, rental.getUserId());
-                    insertStmt.setString(4, rental.getRentDateTime() != null ? isoFormatter.format(rental.getRentDateTime()) : null);
-                    insertStmt.setString(5, rental.getReturnDateTime() != null ? isoFormatter.format(rental.getReturnDateTime()) : null);
+                    insertStmt.setString(4, rental.getRentDateTime() != null ? rental.getRentDateTime() : null);
+                    insertStmt.setString(5, rental.getReturnDateTime() != null ? rental.getReturnDateTime() : null);
 
                     insertStmt.executeUpdate();
                 }

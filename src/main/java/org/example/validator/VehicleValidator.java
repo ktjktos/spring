@@ -2,14 +2,14 @@ package org.example.validator;
 
 import org.example.model.VehicleCategoryConfig;
 import org.example.model.Vehicle;
-import org.example.service.VehicleCategoryConfigService;
+import org.example.simpleService.vehicleCategoryConfigService;
 
 import java.util.Map;
 
 public class VehicleValidator {
-    private final VehicleCategoryConfigService configService;
+    private final vehicleCategoryConfigService configService;
 
-    public VehicleValidator(VehicleCategoryConfigService configService) {
+    public VehicleValidator(vehicleCategoryConfigService configService) {
         this.configService = configService;
     }
 

@@ -1,18 +1,17 @@
-package org.example.service;
+package org.example.simpleService;
 
 import org.example.model.User;
-import org.example.repository.IRentalRepository;
 import org.example.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserService implements IUserService {
+public class SimpleUserService implements IUserService {
 
     IUserRepository userRepo;
     IRentalService rentalService;
 
-    public UserService(IUserRepository userRepo, IRentalService rentalService) {
+    public SimpleUserService(IUserRepository userRepo, IRentalService rentalService) {
         this.userRepo = userRepo;
         this.rentalService = rentalService;
     }

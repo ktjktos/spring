@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IVehicleRepository {
     List<Vehicle> findAll();
-    Vehicle findById(String id);
+    Optional<Vehicle> findById(String id);
     Vehicle save(Vehicle vehicle);
     void deleteById(String id);
 }

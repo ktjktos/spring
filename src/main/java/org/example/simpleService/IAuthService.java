@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.simpleService;
 
 import org.example.model.User;
 

@@ -1,14 +1,16 @@
-package org.example.service;
+package org.example.simpleService;
 
 
 import org.example.model.Rental;
+import org.example.model.User;
+import org.example.model.Vehicle;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface IRentalService {
 
-    Rental rentVehicle(String userId, String vehicleId);
+    Rental rentVehicle(User user, Vehicle vehicle);
 
     Rental returnVehicle(String userId);
 
