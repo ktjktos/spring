@@ -1,4 +1,5 @@
 package org.example.model;
+import jakarta.persistence.*;
 import lombok.*;
 @Getter
 @Setter
@@ -7,10 +8,21 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @Column(nullable = false, unique = true)
     private String id;
+
+    @Column(nullable = false, unique = true)
     private String login;
+
+    @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String role;
 
     public User copy() {

@@ -12,4 +12,7 @@ public interface IRentalRepository {
     void deleteById(String id);
     Optional<Rental> findByUserIdAndReturnDateIsNull(String userId);
     Optional<Rental> findByVehicleIdAndReturnDateIsNull(String vehicleId);
+    List<Rental> findUserRentals(String userId);
+
+    void deleteByVehicleId(String VehicleId);
 }

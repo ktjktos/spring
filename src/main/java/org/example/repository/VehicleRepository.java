@@ -13,7 +13,6 @@ import java.util.*;
 
 public class VehicleRepository implements IVehicleRepository{
     private List<Vehicle> vehicles;
-    private Set<Integer> existingIDs = new HashSet<>();
     public VehicleRepository() {
         Path path = Path.of("vehicles.json");
         vehicles = new ArrayList<>();
@@ -27,11 +26,7 @@ public class VehicleRepository implements IVehicleRepository{
         } catch (IOException e) {
             System.out.println("cos poszlo nie tak w ladowaniu vehicleRepo");
         }
-        if (this.vehicles != null) {
-            for (Vehicle v : vehicles) {
-                existingIDs.add(Integer.parseInt(v.getId()));
-            }
-        } else {
+        if (this.vehicles == null) {
             this.vehicles = new ArrayList<>();
         }
     }
@@ -47,16 +42,8 @@ public class VehicleRepository implements IVehicleRepository{
 
     @Override
     public Vehicle save(Vehicle vehicle) {
-        int id = 1;
-        if (vehicle.getId() == null) {
-            while(existingIDs.contains(id)) { id+=1;}
-            existingIDs.add(id);
-            vehicle.setId(Integer.toString(id));
-            vehicles.add(vehicle);
-        } else {
-            vehicles.remove(vehicle);
-            vehicles.add(vehicle);
-        }
+        vehicles.remove(vehicle);
+        vehicles.add(vehicle);
         this.writeToFile();
         return vehicle;
     }
@@ -66,7 +53,6 @@ public class VehicleRepository implements IVehicleRepository{
         for (Vehicle v: vehicles) {
             if (v.getId().equals(id)) {
                 this.vehicles.remove(v);
-                this.existingIDs.remove(Integer.parseInt(id));
                 this.writeToFile();
                 break;
             }

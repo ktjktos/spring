@@ -29,4 +29,13 @@ public class VehicleCategoryConfig {
                 .attributes(new HashMap<>(attributes))
                 .build();
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();;
+        sb.append(category).append(" attributes:\n").append(" ");
+        attributes.forEach((key,value) -> {
+            sb.append(key).append(": ").append(value).append("\n ");
+        });
+        return sb.toString();
+    }
 }

@@ -5,26 +5,23 @@ import lombok.*;
 import org.example.model.User;
 import org.example.model.Vehicle;
 
-import org.example.repository.RentalRepository;
-import org.example.service.AuthService;
-import org.example.service.RentalService;
-import org.example.service.UserService;
-import org.example.service.VehicleService;
+import org.example.simpleService.*;
 
-import java.util.*;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Builder
 
 public class UIconsole {
 
-    VehicleService vehicleService;
-    UserService userService;
-    AuthService authService;
-    RentalService rentalService;
+    vehicleCategoryConfigService vehicleCategoryConfigService;
+    IVehicleService vehicleService;
+    IUserService userService;
+    IAuthService authService;
+    IRentalService rentalService;
 
     InputHandler inputHandler;
-    User user = null;
+    User user;
 
     public void run() {
         String[] multipleChoice;
@@ -35,14 +32,15 @@ public class UIconsole {
             multipleChoice = inputHandler.getMultipleStrings("Input your login and password",2);
             switch(choice) {
                 case "register":
-                    if (authService.findByLogin(multipleChoice[0]).isPresent()) {
+                    if (userService.findByLogin(multipleChoice[0]).isPresent()) {
                         System.out.println("This login already exists.");
                     } else {
                         authService.register(multipleChoice[0],multipleChoice[1]);
                     }
                     break;
                 case "login":
-                    user = authService.login(multipleChoice[0],multipleChoice[1]);
+                    Optional<User> opUser = authService.login(multipleChoice[0],multipleChoice[1]);
+                    opUser.ifPresent(value -> user = value);
                     if (user != null) {
                         System.out.println("Successful authentication.");
                         break loginLoop;
@@ -54,35 +52,44 @@ public class UIconsole {
         }
         if (user.getRole().equals("USER")) {
             while(true){
-                choice = inputHandler.readSingleChoice("Possible options:\ninfo | show | rent | return | exit","info","show","rent","return","exit");
+                choice = inputHandler.readSingleChoice("Possible options:\ninfo | show | rent | return | showRentalHistory | exit","info","show","rent","return","showRentalHistory","exit");
                 switch (choice) {
                     case "info":
-                        System.out.println(userService.displayCredentials(user));
-                        System.out.println(rentalService.whatVehicleIsRented(user.getId()));
+                        System.out.println("ID: " + user.getId() + "\nLogin: " + user.getLogin());
+                        inputHandler.displayUserRental(rentalService.findActiveRentalByUserId(user.getId()));
                         break;
                     case "show":
-                        List<Vehicle> list = rentalService.getAvailableVehicles();
-                        if (list.isEmpty()) {
-                            System.out.println("No vehicles available currently.");
-                        } else {
-                            for(Vehicle vehicle: list) {System.out.println(vehicle);}
-                        }
+                        inputHandler.displayAvailableVehicles(vehicleService.findAvailableVehicles());
                         break;
                     case "rent":
                         multipleChoice = inputHandler.getMultipleStrings("Input ID number of the car that you want to rent.",1);
-                        if(rentalService.rent(user.getId(),multipleChoice[0])) {
-                            System.out.println("Rented the car successfully.");
+                        if (!vehicleService.isVehicleRented(multipleChoice[0])) {
+                            Optional<Vehicle> vehicle = vehicleService.findById(multipleChoice[0]);
+                            if (vehicle.isPresent()) {
+                                try {
+                                    rentalService.rentVehicle(user, vehicle.get());
+                                    System.out.println("Rented the car successfully.");
+                                } catch (IllegalStateException | IllegalArgumentException e) {
+                                    System.out.println("Error: " + e.getMessage());
+                                }
+                            } else {
+                                System.out.println("Couldn't rent the car.");
+                            }
                         } else {
                             System.out.println("Couldn't rent the car.");
                         }
                         break;
                     case "return":
-                        if (rentalService.returnVehicle(user.getId())) {
+                        try {
+                            rentalService.returnVehicle(user.getId());
                             System.out.println("Vehicle returned successfully.");
-                        } else {
-                            System.out.println("Catalog: ");
-                            System.out.println("No rentals to return.");
+                        } catch (IllegalStateException e) {
+                            System.out.println("Error: " + e.getMessage());
                         }
+                        break;
+                    case "showRentalHistory":
+                        System.out.println("ID: " + user.getId() + "\nLogin: " + user.getLogin());
+                        inputHandler.displayUserRentals(rentalService.findUserRentals(user.getId()));
                         break;
                     case "exit":
                         return;
@@ -92,74 +99,60 @@ public class UIconsole {
         else if (user.getRole().equals("ADMIN")) {
             while(true){
                 choice = inputHandler.readSingleChoice("Possible options: \n" +
-                        "showVehicles | showUsers | add | removeVehicle | removeUser | exit","showVehicles","showUsers","add","removeVehicle","removeUser","exit");
+                        "showVehicles | showUsers | add | removeVehicle | removeUser | showUserRentalHistory | exit","showVehicles","showUsers","add","removeVehicle","removeUser","showUserRentalHistory","exit");
                 switch (choice) {
                     case "showVehicles":
-                        List<Vehicle> list = vehicleService.findAllVehicles();
-                        if (list.isEmpty()) {
-                            System.out.println("No vehicles available currently.");
-                        } else {
-                            System.out.println("Catalog: ");
-                            for(Vehicle vehicle: list) {
-                                System.out.println(vehicle);
-                                if(rentalService.findByVehicleIdAndReturnDateIsNull(vehicle.getId()).isPresent()) {
-                                    System.out.println(" rented");
-                                } else {
-                                    System.out.println(" not rented");
-                                }
-                            }
-                        }
+                        inputHandler.displayAllVehicles(vehicleService.findAllVehicles());
                         break;
                     case "showUsers":
-                        List<User> users = userService.getAll();
-                        if (users.isEmpty()) {
-                            System.out.println("No users are currently registered.");
-                        } else {
-                            System.out.println("Users: ");
-                            for(User user: users) {
-                                System.out.println(user);
-                                if(rentalService.findByUserIdAndReturnDateIsNull(user.getId()).isPresent()) {
-                                    System.out.println(" is currently renting " + rentalService.whatVehicleIsRented(user.getId()));
-                                    System.out.println(" renting since: " + rentalService.findByUserIdAndReturnDateIsNull(user.getId()).get().getRentDateTime());
-                                } else {
-                                    System.out.println(" is not currently renting ");
-                                }
-                            }
-                        }
+                        inputHandler.displayAllUsers(userService.findAllUsers());
                         break;
                     case "add":
-                        Vehicle vehicle = vehicleService.createVehicle(inputHandler.getMultipleStrings("Please input these fields separated by whitespace.\nTYPE_OF_VEHICLE BRAND MODEL YEAR PLATE PRICE",6));
-                        choice = inputHandler.readSingleChoice("Do you want to add attributes? [Y/N]","Y","N");
-                        if (choice.equals("Y")) {
-
-                            multipleChoice = inputHandler.getMultipleStrings("How many attributes do you want to add? Number: ", 1);
-                            int num = Integer.parseInt(multipleChoice[0]);
-                            while(true) {
-                                for (int i = 0; i<num; i++) {
-                                    multipleChoice = inputHandler.getMultipleStrings("Input attribute and a value separated by whitespace",2);
-                                    vehicleService.addAttributes(multipleChoice[0],multipleChoice[1],vehicle);
-                                }
-
+                        Vehicle vehicle = inputHandler.createVehicleFromInput(inputHandler.getMultipleStrings("""
+                                Please input these fields separated by whitespace.
+                                TYPE_OF_VEHICLE BRAND MODEL YEAR PLATE PRICE\
+                                
+                                Example: Car Chevrolet Impala 1967 KAZ2Y5 1000""",6));
+                        inputHandler.displayRequiredAttributes(vehicleCategoryConfigService.findAllCategories());
+                        while(true) {
+                            multipleChoice = inputHandler.getMultipleStrings("Input attribute and a value separated by whitespace",2);
+                            vehicle.addAttribute(multipleChoice[0],multipleChoice[1]);
+                            choice = inputHandler.readSingleChoice("Do you want to add more attributes? [Y/N]","Y","N");
+                            if (choice.equals("N")) {
                                 try {
                                     vehicleService.addVehicle(vehicle);
                                     break;
                                 }
                                 catch(Exception e) {
+                                    e.printStackTrace();
                                     System.out.println("Wrong attributes! try again.");
                                     vehicle.clearAttributes();
                                 }
                             }
-                        } else {
-                            System.out.println("No attributes will be added.");
                         }
                         break;
                     case "removeVehicle":
+                        inputHandler.displayAllVehicles(vehicleService.findAllVehicles());
                         multipleChoice = inputHandler.getMultipleStrings("Which vehicle do you want to delete? ID: ", 1);
-                        rentalService.removeVehicle(multipleChoice[0]);
+                        try {
+                            vehicleService.removeVehicle(multipleChoice[0]);
+                            //System.out.println("Successfully removed the vehicle.");
+                        } catch (IllegalStateException | IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
                         break;
                     case "removeUser":
+                        inputHandler.displayAllUsersToRemove(userService.findAllUsers());
                         multipleChoice = inputHandler.getMultipleStrings("Which user do you want to delete? ID: ", 1);
-                        rentalService.removeUser(multipleChoice[0]);
+                        try {
+                            userService.deleteUser(multipleChoice[0], user.getId());
+                            //System.out.println("Successfully removed the user.");
+                        } catch (SecurityException | IllegalStateException | IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                        break;
+                    case "showUserRentalHistory":
+                        inputHandler.displayAllUsersWithHistory(userService.findAllUsers());
                         break;
                     case "exit":
                         return;
