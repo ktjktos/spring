@@ -1,12 +1,12 @@
 package org.example.model;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class Vehicle {
     private String plate;
     private Integer price;
 
-    @Type(JsonBinaryType.class)
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)

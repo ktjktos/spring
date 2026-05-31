@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: ${APP_PROFILE:jdbc}
+  main:
+    banner-mode: off
+server:
+  port: 8080
+
+example:
+  json:
+    users-file: users.json
+    vehicles-file: vehicles.json
+    rentals-file: rentals.json
+    categories-file: categories.json
