@@ -1,10 +1,10 @@
 spring:
   profiles:
-    active: ${APP_PROFILE:jdbc}
+    active: ${APP_PROFILE:json}
   main:
     banner-mode: off
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 example:
   json:
