@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         .requestMatchers(r -> r.getMethod().equals("POST") && r.getRequestURI().startsWith("/api/vehicles")).hasRole("ADMIN")
