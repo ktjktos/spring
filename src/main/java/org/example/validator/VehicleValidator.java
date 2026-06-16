@@ -1,17 +1,17 @@
 package org.example.validator;
 
+import lombok.RequiredArgsConstructor;
 import org.example.model.VehicleCategoryConfig;
 import org.example.model.Vehicle;
-import org.example.simpleService.vehicleCategoryConfigService;
+import org.example.services.VehicleCategoryConfigService;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
+@RequiredArgsConstructor
 public class VehicleValidator {
-    private final vehicleCategoryConfigService configService;
-
-    public VehicleValidator(vehicleCategoryConfigService configService) {
-        this.configService = configService;
-    }
+    private final VehicleCategoryConfigService configService;
 
     public void validate(Vehicle vehicle) {
         if (vehicle == null) throw new IllegalArgumentException("pojazd nie moze byc nullem");

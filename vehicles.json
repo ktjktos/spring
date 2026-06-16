@@ -34,5 +34,42 @@
     "attributes": {
       "fuelType": "octane"
     }
+  },
+  {
+    "id": "b0fd4dc8-9b9a-40d7-acf9-f34865035375",
+    "typeOfVehicle": "CAR",
+    "brand": "Toyota",
+    "model": "Yaris",
+    "year": 2023,
+    "plate": "LU6789",
+    "price": 120,
+    "attributes": {
+      "fuelType": "Benzyna"
+    }
+  },
+  {
+    "id": "687d0e96-d138-4764-b027-25811b84e8b8",
+    "typeOfVehicle": "MOTORCYCLE",
+    "brand": "Kawasaki",
+    "model": "Ninja 650",
+    "year": 2022,
+    "plate": "LU9876",
+    "price": 250,
+    "attributes": {
+      "licence": "A",
+      "fuelType": "Benzyna"
+    }
+  },
+  {
+    "id": "a2f21e06-34ad-4b69-944e-4d5ed61950c8",
+    "typeOfVehicle": "BUS",
+    "brand": "Mercedes-Benz",
+    "model": "Tourismo",
+    "year": 2019,
+    "plate": "LU11111",
+    "price": 800,
+    "attributes": {
+      "seats": 55.0
+    }
   }
 ]

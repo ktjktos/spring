@@ -66,5 +66,27 @@
       "role": "USER"
     },
     "rentDateTime": "2026-05-23T15:58:21.007348600"
+  },
+  {
+    "id": "f08781ff-5c9b-428f-9e24-61be2813ec33",
+    "vehicle": {
+      "id": "a2f21e06-34ad-4b69-944e-4d5ed61950c8",
+      "typeOfVehicle": "BUS",
+      "brand": "Mercedes-Benz",
+      "model": "Tourismo",
+      "year": 2019,
+      "plate": "LU11111",
+      "price": 800,
+      "attributes": {
+        "seats": 55.0
+      }
+    },
+    "user": {
+      "id": "87b8b284-a763-452e-96e0-f61dccc3b32f",
+      "login": "user2",
+      "password": "$2a$10$HbQOoSe0.dqI9o4hvA1mP.DGxKTutBtJNMBjmRuXuEE.hKRE3yWHO",
+      "role": "USER"
+    },
+    "rentDateTime": "2026-05-31T14:17:10.066075900"
   }
 ]
