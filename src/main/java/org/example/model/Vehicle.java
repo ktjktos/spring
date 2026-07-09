@@ -31,7 +31,11 @@ public class Vehicle {
     @Column(name="production_year")
     private Integer year;
     private String plate;
+    @Column(name="price_per_day")
     private Integer price;
+    private boolean rented = false;
+    private double latitude = 51.246;
+    private double longitude = 22.568;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
@@ -40,7 +44,7 @@ public class Vehicle {
     private Map<String,Object> attributes = new HashMap<>();
 
     @Builder
-    public Vehicle(String id, String typeOfVehicle, String brand, String model, Integer year, String plate, Integer price, Map<String,Object> attributes) {
+    public Vehicle(String id, String typeOfVehicle, String brand, String model, Integer year, String plate, Integer price, boolean rented, double latitude, double longitude, Map<String,Object> attributes) {
         this.id = id;
         this.typeOfVehicle = typeOfVehicle;
         this.brand = brand;
@@ -48,6 +52,9 @@ public class Vehicle {
         this.year = year;
         this.plate = plate;
         this.price = price;
+        this.rented = rented;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.attributes = attributes == null ? new HashMap<>() : new HashMap<>(attributes);
     }
 
@@ -72,6 +79,9 @@ public class Vehicle {
                 .year(year)
                 .plate(plate)
                 .price(price)
+                .rented(rented)
+                .latitude(latitude)
+                .longitude(longitude)
                 .attributes(new HashMap<>(attributes))
                 .build();
     }

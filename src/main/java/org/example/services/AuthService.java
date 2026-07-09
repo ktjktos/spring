@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dto.RegisterRequest;
 import org.example.model.User;
 import org.mindrot.jbcrypt.BCrypt;
 import lombok.*;
@@ -15,11 +16,12 @@ public class AuthService implements IAuthService{
 
     private final IUserService simpleUserService;
 
-    public boolean register(String login, String password) {
+    public boolean register(RegisterRequest request) {
         User user = simpleUserService.save(User.builder()
                 .id(java.util.UUID.randomUUID().toString())
-                .login(login)
-                .password(BCrypt.hashpw(password,BCrypt.gensalt()))
+                .login(request.login())
+                .password(BCrypt.hashpw(request.password(), BCrypt.gensalt()))
+                .address(request.address())
                 .role("USER")
                 .build());
         return user != null;

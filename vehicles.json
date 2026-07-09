@@ -1,75 +1,48 @@
 [
   {
-    "id": "1",
+    "id": "dcaf87e7-ebfb-4259-ab6a-5efb57dd77aa",
     "typeOfVehicle": "Motorcycle",
-    "brand": "Honda",
-    "model": "CBR1000RR",
-    "year": 2020,
-    "plate": "Lu321",
-    "price": 200,
+    "brand": "Kawasaki",
+    "model": "Z900",
+    "year": 2023,
+    "plate": "ASJ123",
+    "price": 120,
+    "rented": false,
+    "latitude": 51.246,
+    "longitude": 22.568,
     "attributes": {
+      "fuelType": "Petrol",
       "licence": "A"
     }
   },
   {
-    "id": "3",
-    "typeOfVehicle": "CAR",
-    "brand": "Ford",
-    "model": "Mondeo",
-    "year": 2018,
-    "plate": "ABCDEF",
+    "id": "cd4ceaa9-3647-4d6d-a831-c3869d11e234",
+    "typeOfVehicle": "Bus",
+    "brand": "Solaris",
+    "model": "Urbino 12",
+    "year": 2021,
+    "plate": "AAA123",
     "price": 500,
+    "rented": false,
+    "latitude": 51.246,
+    "longitude": 22.568,
     "attributes": {
-      "fuelType": "octane"
+      "seats": 45.0
     }
   },
   {
-    "id": "2",
-    "typeOfVehicle": "CAR",
-    "brand": "Chevrolet",
-    "model": "Impala",
-    "year": 1967,
-    "plate": "KAZ2Y5",
-    "price": 10000,
-    "attributes": {
-      "fuelType": "octane"
-    }
-  },
-  {
-    "id": "b0fd4dc8-9b9a-40d7-acf9-f34865035375",
-    "typeOfVehicle": "CAR",
-    "brand": "Toyota",
-    "model": "Yaris",
-    "year": 2023,
-    "plate": "LU6789",
-    "price": 120,
-    "attributes": {
-      "fuelType": "Benzyna"
-    }
-  },
-  {
-    "id": "687d0e96-d138-4764-b027-25811b84e8b8",
-    "typeOfVehicle": "MOTORCYCLE",
-    "brand": "Kawasaki",
-    "model": "Ninja 650",
-    "year": 2022,
-    "plate": "LU9876",
-    "price": 250,
-    "attributes": {
-      "licence": "A",
-      "fuelType": "Benzyna"
-    }
-  },
-  {
-    "id": "a2f21e06-34ad-4b69-944e-4d5ed61950c8",
-    "typeOfVehicle": "BUS",
-    "brand": "Mercedes-Benz",
-    "model": "Tourismo",
+    "id": "c5cb30bc-1d56-40c5-a48f-c2b5bca02f2f",
+    "typeOfVehicle": "Car",
+    "brand": "Audi",
+    "model": "A4 B9",
     "year": 2019,
-    "plate": "LU11111",
-    "price": 800,
+    "plate": "LU 99887",
+    "price": 150,
+    "rented": false,
+    "latitude": 51.246,
+    "longitude": 22.568,
     "attributes": {
-      "seats": 55.0
+      "fuelType": "Petrol"
     }
   }
 ]

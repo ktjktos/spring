@@ -1,20 +1,16 @@
 [
   {
-    "id": "2",
-    "login": "admin",
-    "password": "$2a$10$OvrGgAQ2srWiUEp3Q8DdlOJOwKh/u2nxh.HSRygsOBNwWuc7mdwBK",
+    "id": "fea8070c-420b-43f2-9f2f-ea4312b1bec7",
+    "address": "czekoladowa 67",
+    "login": "wujek",
+    "password": "$2a$10$NIh9nHgzaFeHvbyR.t9kRObn52ZeWEPcCFAtccANcA7lnOZ2sv9i6",
     "role": "ADMIN"
   },
   {
-    "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
+    "id": "e2b7d971-bc4a-43a5-b126-3a4a0dead8a2",
+    "address": "czekoladowa 67 lublin",
     "login": "user",
-    "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
-    "role": "USER"
-  },
-  {
-    "id": "87b8b284-a763-452e-96e0-f61dccc3b32f",
-    "login": "user2",
-    "password": "$2a$10$HbQOoSe0.dqI9o4hvA1mP.DGxKTutBtJNMBjmRuXuEE.hKRE3yWHO",
+    "password": "$2a$10$0o.Ssn3.ezrDmcKrtnnRtOC8OppSVfkwnxUDMrFxZm6y5oysQyGRi",
     "role": "USER"
   }
 ]

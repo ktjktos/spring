@@ -33,6 +33,8 @@ public class Rental {
     @Column(name = "return_date")
     private String returnDateTime;
 
+    private Double totalCost;
+
     public Rental copy() {
         return Rental.builder()
                 .id(id)

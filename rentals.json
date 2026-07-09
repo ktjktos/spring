@@ -1,92 +1,58 @@
 [
   {
-    "id": "e676b041-c0e2-43fa-97d6-b2d81d241832",
+    "id": "347fd396-5990-4341-8f1b-482fd226e51f",
     "vehicle": {
-      "id": "2",
-      "typeOfVehicle": "CAR",
-      "brand": "Chevrolet",
-      "model": "Impala",
-      "year": 1967,
-      "plate": "KAZ2Y5",
-      "price": 10000,
-      "attributes": {
-        "fuelType": "octane"
-      }
-    },
-    "user": {
-      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
-      "login": "user",
-      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
-      "role": "USER"
-    },
-    "rentDateTime": "2026-05-23T15:48:11.713575600",
-    "returnDateTime": "2026-05-23T15:57:10.141489400"
-  },
-  {
-    "id": "01f1f107-2359-49a2-87a5-f6d1bd4cabf5",
-    "vehicle": {
-      "id": "2",
-      "typeOfVehicle": "CAR",
-      "brand": "Chevrolet",
-      "model": "Impala",
-      "year": 1967,
-      "plate": "KAZ2Y5",
-      "price": 10000,
-      "attributes": {
-        "fuelType": "octane"
-      }
-    },
-    "user": {
-      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
-      "login": "user",
-      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
-      "role": "USER"
-    },
-    "rentDateTime": "2026-05-23T15:57:29.869739900",
-    "returnDateTime": "2026-05-23T15:57:37.482993400"
-  },
-  {
-    "id": "b936421e-b12d-4e21-a5c7-23b8b514e00d",
-    "vehicle": {
-      "id": "2",
-      "typeOfVehicle": "CAR",
-      "brand": "Chevrolet",
-      "model": "Impala",
-      "year": 1967,
-      "plate": "KAZ2Y5",
-      "price": 10000,
-      "attributes": {
-        "fuelType": "octane"
-      }
-    },
-    "user": {
-      "id": "29624831-5dd2-4e5d-b293-4c5fee6490e2",
-      "login": "user",
-      "password": "$2a$10$XhK7CPKXL5F0X2G9sDMZfuXZk2IqPFtd.7BG/o7wFHaL.bPgJ28NG",
-      "role": "USER"
-    },
-    "rentDateTime": "2026-05-23T15:58:21.007348600"
-  },
-  {
-    "id": "f08781ff-5c9b-428f-9e24-61be2813ec33",
-    "vehicle": {
-      "id": "a2f21e06-34ad-4b69-944e-4d5ed61950c8",
-      "typeOfVehicle": "BUS",
-      "brand": "Mercedes-Benz",
-      "model": "Tourismo",
+      "id": "c5cb30bc-1d56-40c5-a48f-c2b5bca02f2f",
+      "typeOfVehicle": "Car",
+      "brand": "Audi",
+      "model": "A4 B9",
       "year": 2019,
-      "plate": "LU11111",
-      "price": 800,
+      "plate": "LU 99887",
+      "price": 150,
+      "rented": false,
+      "latitude": 51.246,
+      "longitude": 22.568,
       "attributes": {
-        "seats": 55.0
+        "fuelType": "Petrol"
       }
     },
     "user": {
-      "id": "87b8b284-a763-452e-96e0-f61dccc3b32f",
-      "login": "user2",
-      "password": "$2a$10$HbQOoSe0.dqI9o4hvA1mP.DGxKTutBtJNMBjmRuXuEE.hKRE3yWHO",
+      "id": "e2b7d971-bc4a-43a5-b126-3a4a0dead8a2",
+      "address": "czekoladowa 67 lublin",
+      "login": "user",
+      "password": "$2a$10$0o.Ssn3.ezrDmcKrtnnRtOC8OppSVfkwnxUDMrFxZm6y5oysQyGRi",
       "role": "USER"
     },
-    "rentDateTime": "2026-05-31T14:17:10.066075900"
+    "rentDateTime": "2026-07-09T21:01:47.329210400",
+    "returnDateTime": "2026-07-09T21:09:37.714748300",
+    "totalCost": 150.0
+  },
+  {
+    "id": "6b75b8f7-bb4b-4fe2-a462-13f572daea40",
+    "vehicle": {
+      "id": "c5cb30bc-1d56-40c5-a48f-c2b5bca02f2f",
+      "typeOfVehicle": "Car",
+      "brand": "Audi",
+      "model": "A4 B9",
+      "year": 2019,
+      "plate": "LU 99887",
+      "price": 150,
+      "rented": true,
+      "latitude": 51.246,
+      "longitude": 22.568,
+      "attributes": {
+        "fuelType": "Petrol"
+      }
+    },
+    "user": {
+      "id": "e2b7d971-bc4a-43a5-b126-3a4a0dead8a2",
+      "address": "czekoladowa 67 lublin",
+      "login": "user",
+      "password": "$2a$10$0o.Ssn3.ezrDmcKrtnnRtOC8OppSVfkwnxUDMrFxZm6y5oysQyGRi",
+      "role": "USER"
+    },
+    "rentDateTime": "2026-07-09T21:34:32.877508400",
+    "returnDateTime": "2026-07-09T21:39:01.367764300",
+    "totalCost": 150.0
   }
 ]

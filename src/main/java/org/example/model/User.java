@@ -16,6 +16,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String id;
 
+    @Column(nullable = false)
+    private String address;
+
     @Column(nullable = false, unique = true)
     private String login;
 
